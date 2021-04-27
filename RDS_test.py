@@ -1,6 +1,6 @@
 print("test")
-
 import psycopg2 as ps
+import json
 # define credentials
 credentials = {
     'POSTGRES_ADDRESS': 'db-test.ch9w9rkl1agb.us-east-2.rds.amazonaws.com',  # change to your endpoint
@@ -32,3 +32,10 @@ for table in tables:
     print(query)
     cur.execute(query)
     print(cur.fetchall())
+
+print("test4")
+query = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) SELECT count(*) FROM supplier;"
+cur.execute(query)
+json_output = cur.fetchall()
+with open("test4.json", "w") as write_file:
+    json.dump(json_output, write_file)

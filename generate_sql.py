@@ -7,11 +7,13 @@ import math
 
 join_types = ["right", "left", "inner", "outer"]
 
-joins = {('part', 'partsupp'): (["part.partkey=partsupp.partkey"], ['partkey']), ('supplier', 'partsupp'): (["supplier.suppkey=partsupp.suppkey"], ['suppkey']),
-            ('customer', 'nation'): (["customer.nationkey=nation.nationkey"], ['nationkey']), ('supplier', 'nation'): (["supplier.nationkey=nation.nationkey"], ['nationkey']),
-            ('partsupp', 'lineitem'): (["partsupp.partkey=lineitem.partkey", "partsupp.suppkey=lineitem.suppkey"], ['partkey', 'suppkey']), 
-            ('customer', 'orders'): (["customer.custkey=orders.custkey"], ['custkey']), ('orders', 'lineitem'): (["orders.orderkey=lineitem.orderkey"], ['orderkey']),
-            ('region', 'nation'): (["region.regionkey=nation.nationkey"], ['nationkey'])}
+prefixs = {'part': "p_", 'customer': "c_", "lineitem": "l_", "nation": "n_", "orders": "o_", "partsupp": "ps_", "region": "r_", "supplier": "s_"}
+
+joins = {('part', 'partsupp'): (["part.p_partkey=partsupp.ps_partkey"], ['partkey']), ('supplier', 'partsupp'): (["supplier.s_suppkey=partsupp.ps_suppkey"], ['suppkey']),
+            ('customer', 'nation'): (["customer.c_nationkey=nation.n_nationkey"], ['nationkey']), ('supplier', 'nation'): (["supplier.s_nationkey=nation.n_nationkey"], ['nationkey']),
+            ('partsupp', 'lineitem'): (["partsupp.ps_partkey=lineitem.l_partkey", "partsupp.ps_suppkey=lineitem.l_suppkey"], ['partkey', 'suppkey']), 
+            ('customer', 'orders'): (["customer.c_custkey=orders.o_custkey"], ['custkey']), ('orders', 'lineitem'): (["orders.o_orderkey=lineitem.l_orderkey"], ['orderkey']),
+            ('region', 'nation'): (["region.r_regionkey=nation.n_nationkey"], ['nationkey'])}
 
 # joins = [
 #     "part.partkey=partsupp.partkey", "supplier.suppkey=partsupp.suppkey",
@@ -101,7 +103,7 @@ def get_column_subsets(columns):
         
 
 def generate_selects(table_columns):
-    base  = "explain(Select {} from {};"
+    base  = "Select {} from {};"
     sqls = {}
     for table in table_columns:
         sqls[table] = []
@@ -113,12 +115,48 @@ def generate_selects(table_columns):
                 sqls[table].append(filled_base)
     return sqls
 
+def generate_filters(table_columns):
+    sqls = []
+    base = "select {} from {}\
+            where {} > {}"
+    for table in table_columns:
+        for column in table_columns[table]:
+            percent_inc, percentiles_table, min_val, max_val = get_percentiles(table, column)
+            for val in percentiles_table:
+                sqls.append(base.format(column, table, column, val))
+    return sqls
+    
+
 def generate_joins():
+    sqls = []
     base_filter = "Select * from {}\
-        join {} on {}.{}={}.{}\
+        {} join {} on {}\
         where {}.{} > {} and {}.{} > {}"
     base_no_filter = "Select * from {}\
-        join {} on {}.{}={}.{}"
+        {} join {} on {}"
+    for join in joins:
+        actual_join, columns_involved = joins[join]
+        for i in range(len(actual_join)):
+            join_statement = actual_join[i]
+            column = columns_involved[i]
+            for join_type in join_types:
+                sqls.append(base_no_filter.format(join[0], join_type, join[1], join_statement))
+            percent_inc1, percentiles_table_1, min_val_1, max_val_1 = get_percentiles(join[0], prefixs[join[0]] + column)
+            percent_inc_2, percentiles_table_2, min_val_2, max_val_2 = get_percentiles(join[1], prefixs[join[1]] + column)
+            if percentiles_table_1 is None or percentiles_table_2 is None:
+                continue
+            n1 = len(percentiles_table_1)//4
+            tab1_vals = [min_val_1, percentiles_table_1[n1], percentiles_table_1[n1*2], percentiles_table_1[n1*3], max_val_1]
+            n2 = len(percentiles_table_2)//4
+            tab2_vals = [min_val_2, percentiles_table_2[n2], percentiles_table_2[n2*2], percentiles_table_2[n2*3], max_val_2]
+            for val1 in tab1_vals:
+                for val2 in tab2_vals:
+                    for join_type in join_types:
+                        sqls.append(base_filter.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)) 
+    return sqls
+            
+        
+
 
 
 

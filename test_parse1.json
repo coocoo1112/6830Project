@@ -1,0 +1,63 @@
+{
+    "Execution Time": 3914.949,
+    "Plan": {
+        "Node Type": "Gather",
+        "Plan Rows": 57315,
+        "Startup Cost": 10073.85,
+        "Parallel Aware": false,
+        "Total Cost": 85279.77,
+        "Plan Width": 23,
+        "Single Copy": false,
+        "Workers Planned": 2,
+        "Plans": [
+            {
+                "Node Type": "Hash Join",
+                "Plan Rows": 23881,
+                "Startup Cost": 9073.85,
+                "Inner Unique": false,
+                "Parallel Aware": true,
+                "Join Type": "Inner",
+                "Total Cost": 78548.27,
+                "Plan Width": 23,
+                "Hash Cond": "(orders.o_custkey = customer.c_custkey)",
+                "Parent Relationship": "Outer",
+                "Plans": [
+                    {
+                        "Node Type": "Seq Scan",
+                        "Plan Rows": 1250102,
+                        "Startup Cost": 0.0,
+                        "Relation Name": "orders",
+                        "Parallel Aware": true,
+                        "Total Cost": 64687.03,
+                        "Plan Width": 4,
+                        "Parent Relationship": "Outer",
+                        "Alias": "orders"
+                    },
+                    {
+                        "Node Type": "Hash",
+                        "Plan Rows": 2388,
+                        "Startup Cost": 9044.0,
+                        "Parallel Aware": true,
+                        "Total Cost": 9044.0,
+                        "Plan Width": 23,
+                        "Parent Relationship": "Inner",
+                        "Plans": [
+                            {
+                                "Node Type": "Seq Scan",
+                                "Plan Rows": 2388,
+                                "Startup Cost": 0.0,
+                                "Filter": "((c_custkey <= 15470) AND (c_custkey >= 10000))",
+                                "Relation Name": "customer",
+                                "Parallel Aware": true,
+                                "Total Cost": 9044.0,
+                                "Plan Width": 23,
+                                "Parent Relationship": "Outer",
+                                "Alias": "customer"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "Execution Time": 5599.911,
+    "Plan": {
+        "Hash Cond": "(partsupp.ps_partkey = part.p_partkey)",
+        "Startup Cost": 25006.0,
+        "Parallel Aware": false,
+        "Join Type": "Inner",
+        "Node Type": "Hash Join",
+        "Plan Width": 274,
+        "Inner Unique": false,
+        "Plan Rows": 1599967,
+        "Total Cost": 171326.22,
+        "Plans": [
+            {
+                "Startup Cost": 0.0,
+                "Parallel Aware": false,
+                "Node Type": "Seq Scan",
+                "Alias": "partsupp",
+                "Plan Width": 144,
+                "Plan Rows": 1599967,
+                "Parent Relationship": "Outer",
+                "Total Cost": 50883.67,
+                "Relation Name": "partsupp"
+            },
+            {
+                "Startup Cost": 12193.0,
+                "Parallel Aware": false,
+                "Node Type": "Hash",
+                "Plan Width": 130,
+                "Plan Rows": 400000,
+                "Parent Relationship": "Inner",
+                "Total Cost": 12193.0,
+                "Plans": [
+                    {
+                        "Startup Cost": 0.0,
+                        "Parallel Aware": false,
+                        "Node Type": "Seq Scan",
+                        "Alias": "part",
+                        "Plan Width": 130,
+                        "Plan Rows": 400000,
+                        "Parent Relationship": "Outer",
+                        "Total Cost": 12193.0,
+                        "Relation Name": "part"
+                    }
+                ]
+            }
+        ]
+    }
+}

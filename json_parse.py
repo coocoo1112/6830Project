@@ -67,13 +67,10 @@ def get_keys(foldername):
             return set(json.load(json_file))
 
 
-
-
 """
 parse plan node in postgres explain analyze json output
 """
 def parse_node(node, keys):
-   # foldername param for get_keys is hardcoded, fine for our purposes
    return {i:node[i] for i in keys if i in node}
 
 """
@@ -83,13 +80,15 @@ def parse_plan(plan):
 
     res = {}
     res["Execution Time"] = plan["Execution Time"]
+    # foldername param for get_keys is hardcoded, fine for our purposes
     keys = get_keys("explain_json")
     keys.remove("Plans")
 
     res["Plan"] = explore_plan(plan["Plan"], lambda x: parse_node(x, keys), False)
 
     return res
-        
+
+       
 def get_explains(tests, foldername):
     folder = "{}/{}".format(os.getcwd(), foldername)
     if not os.path.exists(folder):

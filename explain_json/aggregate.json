@@ -1,0 +1,48 @@
+[
+    [
+        [
+            {
+                "Plan": {
+                    "Node Type": "Aggregate",
+                    "Strategy": "Sorted",
+                    "Partial Mode": "Simple",
+                    "Parallel Aware": false,
+                    "Startup Cost": 60349.78,
+                    "Total Cost": 67349.78,
+                    "Plan Rows": 400000,
+                    "Plan Width": 41,
+                    "Group Key": [
+                        "p_name"
+                    ],
+                    "Plans": [
+                        {
+                            "Node Type": "Sort",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": false,
+                            "Startup Cost": 60349.78,
+                            "Total Cost": 61349.78,
+                            "Plan Rows": 400000,
+                            "Plan Width": 33,
+                            "Sort Key": [
+                                "p_name"
+                            ],
+                            "Plans": [
+                                {
+                                    "Node Type": "Seq Scan",
+                                    "Parent Relationship": "Outer",
+                                    "Parallel Aware": false,
+                                    "Relation Name": "part",
+                                    "Alias": "part",
+                                    "Startup Cost": 0.0,
+                                    "Total Cost": 12193.0,
+                                    "Plan Rows": 400000,
+                                    "Plan Width": 33
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    ]
+]

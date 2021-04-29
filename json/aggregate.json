@@ -1,0 +1,66 @@
+[
+    [
+        [
+            {
+                "Plan": {
+                    "Node Type": "Aggregate",
+                    "Strategy": "Sorted",
+                    "Partial Mode": "Simple",
+                    "Parallel Aware": false,
+                    "Startup Cost": 60349.78,
+                    "Total Cost": 67349.78,
+                    "Plan Rows": 400000,
+                    "Plan Width": 41,
+                    "Actual Startup Time": 2587.161,
+                    "Actual Total Time": 4175.804,
+                    "Actual Rows": 399993,
+                    "Actual Loops": 1,
+                    "Group Key": [
+                        "p_name"
+                    ],
+                    "Plans": [
+                        {
+                            "Node Type": "Sort",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": false,
+                            "Startup Cost": 60349.78,
+                            "Total Cost": 61349.78,
+                            "Plan Rows": 400000,
+                            "Plan Width": 33,
+                            "Actual Startup Time": 2587.143,
+                            "Actual Total Time": 3880.055,
+                            "Actual Rows": 400000,
+                            "Actual Loops": 1,
+                            "Sort Key": [
+                                "p_name"
+                            ],
+                            "Sort Method": "external merge",
+                            "Sort Space Used": 17184,
+                            "Sort Space Type": "Disk",
+                            "Plans": [
+                                {
+                                    "Node Type": "Seq Scan",
+                                    "Parent Relationship": "Outer",
+                                    "Parallel Aware": false,
+                                    "Relation Name": "part",
+                                    "Alias": "part",
+                                    "Startup Cost": 0.0,
+                                    "Total Cost": 12193.0,
+                                    "Plan Rows": 400000,
+                                    "Plan Width": 33,
+                                    "Actual Startup Time": 0.027,
+                                    "Actual Total Time": 145.076,
+                                    "Actual Rows": 400000,
+                                    "Actual Loops": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "Planning Time": 0.502,
+                "Triggers": [],
+                "Execution Time": 4254.215
+            }
+        ]
+    ]
+]

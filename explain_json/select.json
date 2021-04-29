@@ -1,0 +1,32 @@
+[
+    [
+        [
+            {
+                "Plan": {
+                    "Node Type": "Gather",
+                    "Parallel Aware": false,
+                    "Startup Cost": 1000.0,
+                    "Total Cost": 288413.66,
+                    "Plan Rows": 30,
+                    "Plan Width": 117,
+                    "Workers Planned": 2,
+                    "Single Copy": false,
+                    "Plans": [
+                        {
+                            "Node Type": "Seq Scan",
+                            "Parent Relationship": "Outer",
+                            "Parallel Aware": true,
+                            "Relation Name": "lineitem",
+                            "Alias": "lineitem",
+                            "Startup Cost": 0.0,
+                            "Total Cost": 287410.66,
+                            "Plan Rows": 12,
+                            "Plan Width": 117,
+                            "Filter": "(l_partkey = 12821)"
+                        }
+                    ]
+                }
+            }
+        ]
+    ]
+]

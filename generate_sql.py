@@ -46,6 +46,8 @@ def get_all_stats(tables):
         column = stat[1]
         hist_bounds = stat[2]
         common_vals = stat[3]
+        if hist_bounds: hist_bounds = get_set_from_string(hist_bounds)
+        if common_vals: common_vals = get_set_from_string(common_vals)
         avg_width = stat[4]
         null_frac = stat[5]
         n_distinct = stat[6]
@@ -90,7 +92,7 @@ def get_set_from_string(set_string):
             ret_list.append(float(val))
     except ValueError:
         for val in vals_list:
-            ret_list.append(val[1:-1].strip())
+            ret_list.append(val.strip())
     return ret_list
         
 

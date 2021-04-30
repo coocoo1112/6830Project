@@ -6,6 +6,8 @@ import random
 import math
 import os
 
+from dataset_generator import create_data_set
+
 join_types = ["right", "left", "inner", "outer"]
 
 prefixs = {'part': "p_", 'customer': "c_", "lineitem": "l_", "nation": "n_", "orders": "o_", "partsupp": "ps_", "region": "r_", "supplier": "s_"}
@@ -194,14 +196,14 @@ def generate_joins():
 
 if __name__ =="__main__":
 
-    total_sqls = []
-    table_stats = get_all_stats(tables)
-    #json_stats = json.loads(table_stats)
-    print("done")
+    # total_sqls = []
+    # table_stats = get_all_stats(tables)
+    # #json_stats = json.loads(table_stats)
+    # print("done")
 
-    folder = "{}/{}".format(os.getcwd(), "json")
-    with open("table_stats.json", "w") as f:
-            json.dump(table_stats, f, indent=4)
+    # folder = "{}/{}".format(os.getcwd(), "json")
+    # with open("table_stats.json", "w") as f:
+    #         json.dump(table_stats, f, indent=4)
     
 
 
@@ -228,3 +230,5 @@ if __name__ =="__main__":
     # print(test)
     #print(get_column_subsets(["col1", "col2", "col3", "col4", "col5", "col6"]))
     #print("\n".join(generate_selects(table_columns)))
+
+  

@@ -13,11 +13,13 @@ TABLES = set([i[0] for i in run_query(TABLES_QUERY)])
 
 TABLE_CACHE = {}
 
+
 def open_table_stats(json_file):
     with open(json_file, "r") as json_output:
         return json.load(json_output)
 
 TABLE_STATS = open_table_stats("table_stats.json")
+
 
 def create_data_set(query, csv_name):
     
@@ -57,7 +59,6 @@ def add_row(query, csv_writer):
     row_dict["query"] = query
     row_dict["execution_time"] = output["Execution Time"]
     rows = None
-
     for i, table in enumerate(relations):
         if table not in TABLE_CACHE:
             table_fields = make_table_fields(i+1)
@@ -75,9 +76,6 @@ def add_row(query, csv_writer):
     csv_writer.writerow(row_dict)
     
 
-
-
-
 def get_max_num_columns(json_file_name):
     with open(json_file_name, "r") as json_file:
         json_text = json.load(json_file)
@@ -92,8 +90,12 @@ if __name__ == "__main__":
 
     # print(hi[0][0][0])
 
-    query = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select * from region join nation on region.r_regionkey=nation.n_regionkey;"
+    # query = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select * from region join nation on region.r_regionkey=nation.n_regionkey;"
+    query = ["EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_nationkey from nation", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_regionkey from nation"]
 
-    create_data_set(query, "test4.csv")
+    for k in range(10):
+        for j in query:
+            create_data_set(j, "test6.csv")
+    pass
 
 

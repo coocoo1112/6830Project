@@ -1,10 +1,12 @@
 from RDS_query import run_query
+from dataset_generator import create_data_set
 import json
 import sys
 import itertools
 import random
 import math
 import os
+import datetime
 
 join_types = ["right", "left", "inner", "outer"]
 
@@ -132,7 +134,7 @@ def get_column_subsets(columns):
         
 
 def generate_selects(table_columns):
-    base  = "Select {} from {};"
+    base  = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select {} from {} ;"
     sqls = {}
     for table in table_columns:
         sqls[table] = []
@@ -141,13 +143,14 @@ def generate_selects(table_columns):
         for n in subsets:
             for subset in subsets[n]:
                 filled_base = base.format(subset, table)
+
                 sqls[table].append(filled_base)
     return sqls
 
 def generate_filters(table_columns):
     sqls = []
-    base = "select {} from {}\
-            where {} > {};"
+    base = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select {} from {}\
+            where {} > {} ;"
     for table in table_columns:
         for column in table_columns[table]:
             percent_inc, percentiles_table, min_val, max_val = get_percentiles(table, column)
@@ -160,11 +163,11 @@ def generate_filters(table_columns):
 
 def generate_joins():
     sqls = []
-    base_filter = "Select * from {}\
+    base_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
         {} join {} on {}\
-        where {}.{} > {} and {}.{} > {};"
-    base_no_filter = "Select * from {}\
-        {} join {} on {};"
+        where {}.{} > {} and {}.{} > {} ;"
+    base_no_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
+        {} join {} on {} ;"
     for join in joins:
         actual_join, columns_involved = joins[join]
         for i in range(len(actual_join)):
@@ -183,43 +186,81 @@ def generate_joins():
             for val1 in tab1_vals:
                 for val2 in tab2_vals:
                     for join_type in join_types:
-                        sqls.append(base_filter.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)) 
+                        query = base_filter.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)
+                        #columns = 
+                        sqls.append(query) 
     return sqls
             
         
+def get_done_queries():
+    queries = set()
+    with open("trial_one_data.csv", 'r') as f:
+        first = f.readline()
+        while True:
+            line = f.readline()
+            if line == "":
+                break
+            queries.add(line.split(";")[0][1:] + ";")
+    return queries
+            
 
 
 
 
 
-if __name__ =="__main__":
+if __name__ == "__main__":
 
     total_sqls = []
-    table_stats = get_all_stats(tables)
-    #json_stats = json.loads(table_stats)
-    print("done")
+    # table_stats = get_all_stats(tables)
+    # #json_stats = json.loads(table_stats)
+    # print("done")
 
-    folder = "{}/{}".format(os.getcwd(), "json")
-    with open("table_stats.json", "w") as f:
-            json.dump(table_stats, f, indent=4)
+    # folder = "{}/{}".format(os.getcwd(), "json")
+    # with open("table_stats.json", "w") as f:
+    #         json.dump(table_stats, f, indent=4)
     
 
+    # done_queries = get_done_queries()
+    print("start")
+    test = generate_selects(table_columns)
+    print([(i, len(test[i])) for i in test])
+    test2 = generate_joins()
+    print("step2", len(test2))
+    test3 = generate_filters(table_columns)
+    print("finished", len(test3))
+    for i in test:
+        total_sqls += test[i]
+        print(random.choice(test[i]))
 
-    # print("start")
-    # test = generate_selects(table_columns)
-    # print([(i, len(test[i])) for i in test])
-    # test2 = generate_joins()
-    # print("step2", len(test2))
-    # test3 = generate_filters(table_columns)
-    # print("finished", len(test3))
-    # for i in test:
-    #     total_sqls += test[i]
-    #     print(random.choice(test[i]))
+    total_sqls += test2
+    total_sqls += test3
+    print(random.choice(test2))
+    print(random.choice(test3))
+    print(len(total_sqls))
+    table = "trial_one_data1.csv"
+    queries_done = set()
+    not_finished = set()
+    failed_count = 0
+    start = datetime.datetime.now()
+    for i, query in enumerate(total_sqls):
+        print("elapsed time: {}".format(datetime.datetime.now() - start))
+        print(i, "out of ", len(total_sqls))
+        # if query in done_queries:
+        #     continue
+        try:
+            create_data_set(query, table)
+            queries_done.add(query)
+        except:
+            print("Failed: {}".format(failed_count))
+            not_finished.add(query)
+    print(queries_done, "\n\n\n\n")
+    print(not_finished)
 
-    # total_sqls += test2
-    # total_sqls += test3
-    # print(random.choice(test2))
-    # print(random.choice(test3))
+    # testidk = ["EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_nationkey from nation ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_regionkey from nation ;"]
+    # for idk in testidk:
+    #     create_data_set(idk, "first_test3.csv")
+
+
 
     
     # test = get_percentiles("nation", "n_nationkey")

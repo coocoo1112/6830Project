@@ -90,7 +90,6 @@ def add_row(query, csv_writer):
     values = [query, output["Execution Time"]]
     for table_name in relations:
         filepath = os.path.join(FILE_PATH_BASE, "{}_table_stats.json".format(table_name))
-        print(filepath)
         values.append(filepath)
     
     row_dict = {k:v for k, v in zip(FIELDS, values)}
@@ -120,7 +119,7 @@ def get_max_num_columns(json_file_name):
             most = max(most, len(json_text[key]))
         return most
 
-        
+      
 if __name__ == "__main__":
     # hi = run_query("EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from partsupp right join lineitem on partsupp.ps_partkey=lineitem.l_partkey;")
     #unique_stat_names("table_stats.json", "table_info")

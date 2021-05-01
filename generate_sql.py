@@ -231,4 +231,4 @@ if __name__ =="__main__":
     #print(get_column_subsets(["col1", "col2", "col3", "col4", "col5", "col6"]))
     #print("\n".join(generate_selects(table_columns)))
 
-  
+    pass

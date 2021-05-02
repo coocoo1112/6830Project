@@ -8,16 +8,19 @@ import math
 import os
 import datetime
 
-join_types = ["right", "left", "inner", "outer"]
+
+from dataset_generator import create_data_set
+
+join_types = [""]#["right", "left", "inner"]#, "outer"]
 
 prefixs = {'part': "p_", 'customer': "c_", "lineitem": "l_", "nation": "n_", "orders": "o_", "partsupp": "ps_", "region": "r_", "supplier": "s_"}
 
 joins = {('part', 'partsupp'): (["part.p_partkey=partsupp.ps_partkey"], ['partkey']), ('supplier', 'partsupp'): (["supplier.s_suppkey=partsupp.ps_suppkey"], ['suppkey']),
             ('customer', 'nation'): (["customer.c_nationkey=nation.n_nationkey"], ['nationkey']), ('supplier', 'nation'): (["supplier.s_nationkey=nation.n_nationkey"], ['nationkey']),
-            ('partsupp', 'lineitem'): (["partsupp.ps_partkey=lineitem.l_partkey", "partsupp.ps_suppkey=lineitem.l_suppkey"], ['partkey', 'suppkey']), 
-            ('customer', 'orders'): (["customer.c_custkey=orders.o_custkey"], ['custkey']), ('orders', 'lineitem'): (["orders.o_orderkey=lineitem.l_orderkey"], ['orderkey']),
+            ('customer', 'orders'): (["customer.c_custkey=orders.o_custkey"], ['custkey']),
             ('region', 'nation'): (["region.r_regionkey=nation.n_regionkey"], ['regionkey'])}
 
+#('partsupp', 'lineitem'): (["partsupp.ps_partkey=lineitem.l_partkey", "partsupp.ps_suppkey=lineitem.l_suppkey"], ['partkey', 'suppkey']), ('orders', 'lineitem'): (["orders.o_orderkey=lineitem.l_orderkey"], ['orderkey'])
 
 tables_query = "SELECT tablename FROM pg_catalog.pg_tables \
         WHERE schemaname != 'pg_catalog' AND \
@@ -94,7 +97,7 @@ def get_set_from_string(set_string):
             ret_list.append(float(val))
     except ValueError:
         for val in vals_list:
-            ret_list.append(val.strip())
+            ret_list.append(val.strip().replace("\"", ""))
     return ret_list
         
 
@@ -157,7 +160,10 @@ def generate_filters(table_columns):
             if percentiles_table is None:
                 continue
             for val in percentiles_table:
-                sqls.append(base.format(column, table, column, val))
+                if type(val) != float:
+                    sqls.append(base.format(column, table, column, "'" + val + "'"))
+                else:
+                    sqls.append(base.format(column, table, column, val))
     return sqls
     
 
@@ -186,6 +192,10 @@ def generate_joins():
             for val1 in tab1_vals:
                 for val2 in tab2_vals:
                     for join_type in join_types:
+                        if type(val1) != float:
+                            val1 = "'" + val1 + "'"
+                        if type(val2) != float:
+                            val2 = "'" + val2 + "'"
                         query = base_filter.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)
                         #columns = 
                         sqls.append(query) 
@@ -228,16 +238,19 @@ if __name__ == "__main__":
     print("step2", len(test2))
     test3 = generate_filters(table_columns)
     print("finished", len(test3))
-    for i in test:
-        total_sqls += test[i]
-        print(random.choice(test[i]))
+    # for i in test:
+    #     total_sqls += test[i]
+    #     print(random.choice(test[i]))
 
-    total_sqls += test2
-    total_sqls += test3
+    # total_sqls = random.sample(total_sqls, k=100)
+    total_sqls = []
+
+    #total_sqls += random.sample(test2, k=50)
+    total_sqls += random.sample(test3, k=28)
     print(random.choice(test2))
     print(random.choice(test3))
     print(len(total_sqls))
-    table = "trial_one_data1.csv"
+    table = "trial_one_data.csv"
     queries_done = set()
     not_finished = set()
     failed_count = 0
@@ -248,11 +261,13 @@ if __name__ == "__main__":
         # if query in done_queries:
         #     continue
         try:
+            print(query)
             create_data_set(query, table)
             queries_done.add(query)
         except:
-            print("Failed: {}".format(failed_count))
+            print("Failed: {}".format(len(not_finished)))
             not_finished.add(query)
+            print(query)
     print(queries_done, "\n\n\n\n")
     print(not_finished)
 
@@ -269,3 +284,5 @@ if __name__ == "__main__":
     # print(test)
     #print(get_column_subsets(["col1", "col2", "col3", "col4", "col5", "col6"]))
     #print("\n".join(generate_selects(table_columns)))
+
+    pass

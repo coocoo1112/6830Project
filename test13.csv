@@ -1,3 +1,0 @@
-query,execution_time,table1_stats_filepath,table2_stats_filepath
-"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_nationkey from nation;",0.053,,
-"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_regionkey from nation ;",0.058,C:\Users\Steven Yang\desktop\6.830\6830Project/table_info\nation_table_stats.json,

@@ -1,4 +1,0 @@
-query,execution_time,table1_stats_filepath,table2_stats_filepath
-"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select * from region join nation on region.r_regionkey=nation.n_regionkey ;",0.14,C:\Users\Steven Yang\desktop\6.830\6830Project/table_info\region_table_stats.json,C:\Users\Steven Yang\desktop\6.830\6830Project/table_info\nation_table_stats.json
-"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_nationkey from nation ;",0.055,C:\Users\Steven Yang\desktop\6.830\6830Project/table_info\nation_table_stats.json,
-"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_regionkey from nation ;",0.059,C:\Users\Steven Yang\desktop\6.830\6830Project/table_info\nation_table_stats.json,

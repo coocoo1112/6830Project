@@ -51,16 +51,15 @@ def unique_stat_names(filename, foldername):
         else:
             return
 
-FIELDS = ["query", "execution_time", "table1_stats_filepath", "table2_stats_filepath"]
-FILE_PATH_BASE = "{}/{}".format(os.getcwd(), "table_info")
+FIELDS = ["query", "execution_time", "plan"]
+# FILE_PATH_BASE = "{}/{}".format(os.getcwd(), "table_info")
 def create_data_set(query, csv_name):
     
-    query_explain_analyze = run_query(query)
     #table1_fields = make_table_fields(1)
     # fields.extend(table1_fields)
     # table2_fields = make_table_fields(2)
     # fields.extend(table2_fields)
-
+    
     if not os.path.exists(csv_name):
         with open(csv_name, "w", newline='') as csv_file:
             csv_writer = writer(csv_file)
@@ -85,12 +84,11 @@ def make_table_fields(table_num):
 
 
 def add_row(query, csv_writer):
-    relations = [i for i in query.split() if i in TABLES]
     output = run_query(query)[0][0][0]
-    values = [query, output["Execution Time"]]
-    for table_name in relations:
-        filepath = "table_info\\" + "{}_table_stats.json".format(table_name)#os.path.join(FILE_PATH_BASE, "{}_table_stats.json".format(table_name))
-        values.append(filepath)
+    values = [query, output["Execution Time"], output["Plan"]]
+    # for table_name in relations:
+    #     filepath = "table_info\\" + "{}_table_stats.json".format(table_name)#os.path.join(FILE_PATH_BASE, "{}_table_stats.json".format(table_name))
+    #     values.append(filepath)
     
     row_dict = {k:v for k, v in zip(FIELDS, values)}
     #rows = None

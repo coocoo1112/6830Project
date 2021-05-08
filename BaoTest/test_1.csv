@@ -1,0 +1,2 @@
+query,execution_time,plan
+"EXPLAIN (ANALYZE false, COSTS true, FORMAT json) Select s_suppkey, s_nationkey, s_address, s_name, s_comment, s_phone, s_acctbal from supplier ;",24.496,"{""Plan"": {""Node Type"": ""Seq Scan"", ""Parallel Aware"": false, ""Relation Name"": ""supplier"", ""Alias"": ""supplier"", ""Startup Cost"": 0.0, ""Total Cost"": 1286.0, ""Plan Rows"": 40000, ""Plan Width"": 144}}"

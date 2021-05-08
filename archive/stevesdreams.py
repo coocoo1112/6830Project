@@ -1,16 +1,17 @@
 
-from csv import writer, DictWriter
+from csv import writer, DictWriter, DictReader
 import os
 from RDS_query import run_query
 import json
-import re;
+import re
+import pickle
 
 
-TABLES_QUERY = "SELECT tablename FROM pg_catalog.pg_tables \
-    WHERE schemaname != 'pg_catalog' AND \
-    schemaname != 'information_schema';"
+# TABLES_QUERY = "SELECT tablename FROM pg_catalog.pg_tables \
+#     WHERE schemaname != 'pg_catalog' AND \
+#     schemaname != 'information_schema';"
 
-TABLES = set([i[0] for i in run_query(TABLES_QUERY)])
+# TABLES = set([i[0] for i in run_query(TABLES_QUERY)])
 
 TABLE_CACHE = {}
 
@@ -19,7 +20,7 @@ def open_table_stats(json_file):
     with open(json_file, "r") as json_output:
         return json.load(json_output)
 
-TABLE_STATS = open_table_stats("table_stats.json")
+# TABLE_STATS = open_table_stats("table_stats.json")
 
 
 def unique_stat_names(filename, foldername):
@@ -51,7 +52,7 @@ def unique_stat_names(filename, foldername):
         else:
             return
 
-FIELDS = ["query", "execution_time", "plan"]
+FIELDS = ["query", "plan", "execution_time (ms)"]
 # FILE_PATH_BASE = "{}/{}".format(os.getcwd(), "table_info")
 def create_data_set(query, csv_name):
     
@@ -117,6 +118,39 @@ def get_max_num_columns(json_file_name):
             most = max(most, len(json_text[key]))
         return most
 
+
+# def add_row_pickle():
+#     pass
+
+
+def one_time_process(new_data_set):
+    
+    with open(new_data_set, "w", newline='') as csv_file:
+        csv_writer = writer(csv_file)
+        csv_writer.writerow(FIELDS)
+        dict_writer = DictWriter(csv_file, fieldnames=FIELDS)
+        #add_row(query, dict_writer)
+        with open("trial_one_data.csv", "r") as f:
+            reader = DictReader(f)
+            for i, row in enumerate(reader):
+                values = []
+
+                print("Query {}".format(i))
+                new_query = row['query'].replace("ANALYZE true", "ANALYZE false")
+                values.append(new_query)
+                #appends as a string
+                explain_output_plan = run_query(new_query)[0][0][0]
+                values.append(json.dumps(explain_output_plan))
+                values.append(row["execution_time"])
+                row_dict = {k:v for k, v in zip(FIELDS, values)}
+                dict_writer.writerow(row_dict)
+                
+
+
+    
+
+
+
       
 if __name__ == "__main__":
     # hi = run_query("EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from partsupp right join lineitem on partsupp.ps_partkey=lineitem.l_partkey;")
@@ -125,10 +159,10 @@ if __name__ == "__main__":
     # print(hi[0][0][0])
 
     # test to make sure csv looks right
-    query = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select * from region join nation on region.r_regionkey=nation.n_regionkey ;"
-    query = ["EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select * from region join nation on region.r_regionkey=nation.n_regionkey ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_nationkey from nation ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_regionkey from nation ;"]
-    for q in query:
-        create_data_set(q, "test14.csv")
+    # query = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select * from region join nation on region.r_regionkey=nation.n_regionkey ;"
+    # query = ["EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select * from region join nation on region.r_regionkey=nation.n_regionkey ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_nationkey from nation ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_regionkey from nation ;"]
+    # for q in query:
+    #     create_data_set(q, "test14.csv")
 
     # make sure paths can be read
     # path_ =  'C:\\Users\\Steven Yang\\desktop\\6.830\\6830Project/table_info\\nation_table_stats.json'
@@ -137,6 +171,4 @@ if __name__ == "__main__":
     #     x = json.load(test)
     #     print(x)
 
-
-
-
+    one_time_process("trail_two_data.csv")

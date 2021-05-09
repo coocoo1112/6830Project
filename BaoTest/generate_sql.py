@@ -8,19 +8,15 @@ import math
 import os
 import datetime
 
-
-from dataset_generator import create_data_set
-
-join_types = [""]#["right", "left", "inner"]#, "outer"]
+join_types = ["right", "left", "inner"]
 
 prefixs = {'part': "p_", 'customer': "c_", "lineitem": "l_", "nation": "n_", "orders": "o_", "partsupp": "ps_", "region": "r_", "supplier": "s_"}
 
 joins = {('part', 'partsupp'): (["part.p_partkey=partsupp.ps_partkey"], ['partkey']), ('supplier', 'partsupp'): (["supplier.s_suppkey=partsupp.ps_suppkey"], ['suppkey']),
             ('customer', 'nation'): (["customer.c_nationkey=nation.n_nationkey"], ['nationkey']), ('supplier', 'nation'): (["supplier.s_nationkey=nation.n_nationkey"], ['nationkey']),
             ('customer', 'orders'): (["customer.c_custkey=orders.o_custkey"], ['custkey']),
-            ('region', 'nation'): (["region.r_regionkey=nation.n_regionkey"], ['regionkey'])}
-
-#('partsupp', 'lineitem'): (["partsupp.ps_partkey=lineitem.l_partkey", "partsupp.ps_suppkey=lineitem.l_suppkey"], ['partkey', 'suppkey']), ('orders', 'lineitem'): (["orders.o_orderkey=lineitem.l_orderkey"], ['orderkey'])
+            ('region', 'nation'): (["region.r_regionkey=nation.n_regionkey"], ['regionkey']),
+            ('partsupp', 'lineitem'): (["partsupp.ps_partkey=lineitem.l_partkey", "partsupp.ps_suppkey=lineitem.l_suppkey"], ['partkey', 'suppkey']), ('orders', 'lineitem'): (["orders.o_orderkey=lineitem.l_orderkey"], ['orderkey'])}
 
 tables_query = "SELECT tablename FROM pg_catalog.pg_tables \
         WHERE schemaname != 'pg_catalog' AND \
@@ -176,6 +172,7 @@ def generate_joins():
         {} join {} on {} ;"
     for join in joins:
         actual_join, columns_involved = joins[join]
+        print(join)
         for i in range(len(actual_join)):
             join_statement = actual_join[i]
             column = columns_involved[i]
@@ -189,8 +186,12 @@ def generate_joins():
             tab1_vals = [min_val_1, percentiles_table_1[n1], percentiles_table_1[n1*2], percentiles_table_1[n1*3], max_val_1]
             n2 = len(percentiles_table_2)//4
             tab2_vals = [min_val_2, percentiles_table_2[n2], percentiles_table_2[n2*2], percentiles_table_2[n2*3], max_val_2]
-            for val1 in tab1_vals:
-                for val2 in tab2_vals:
+            tab1_vals = [elm for i, elm in enumerate(percentiles_table_1) if i % 3 == 0]
+            tab2_vals = [elm for i, elm in enumerate(percentiles_table_2) if i % 3 == 0]
+
+            print("len of tab 1: {}, len of tab2: {}".format(len(tab1_vals), len(tab2_vals)))
+            for val1 in tab1_vals:#percentiles_table_1:#tab1_vals:
+                for val2 in tab2_vals:#percentiles_table_2:#
                     for join_type in join_types:
                         if type(val1) != float:
                             val1 = "'" + val1 + "'"
@@ -220,6 +221,7 @@ def get_done_queries():
 
 if __name__ == "__main__":
 
+
     total_sqls = []
     # table_stats = get_all_stats(tables)
     # #json_stats = json.loads(table_stats)
@@ -235,22 +237,25 @@ if __name__ == "__main__":
     test = generate_selects(table_columns)
     print([(i, len(test[i])) for i in test])
     test2 = generate_joins()
-    print("step2", len(test2))
+    
     test3 = generate_filters(table_columns)
+    
+    for i in test:
+        total_sqls += test[i]
+    print("step1", len(total_sqls))
+    print("step2", len(test2))
     print("finished", len(test3))
-    # for i in test:
-    #     total_sqls += test[i]
-    #     print(random.choice(test[i]))
-
+    total_sqls += test2
+    total_sqls += test3
     # total_sqls = random.sample(total_sqls, k=100)
-    total_sqls = []
+    # total_sqls = []
 
     #total_sqls += random.sample(test2, k=50)
-    total_sqls += random.sample(test3, k=28)
-    print(random.choice(test2))
-    print(random.choice(test3))
+    # total_sqls += random.sample(test3, k=28)
+    # print(random.choice(test2))
+    # print(random.choice(test3))
     print(len(total_sqls))
-    table = "trial_one_data.csv"
+    table = "data_v2.csv"
     queries_done = set()
     not_finished = set()
     failed_count = 0

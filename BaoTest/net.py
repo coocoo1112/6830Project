@@ -50,4 +50,4 @@ class BaoNet(nn.Module):
         return super().cuda()
 
 if __name__ == "__main__":
-    print("hi")
+    pass

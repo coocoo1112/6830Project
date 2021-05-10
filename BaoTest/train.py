@@ -43,5 +43,5 @@ def train_and_save_model(csv_file, verbose=True):
     return reg
 
 if __name__ == "__main__":
-    train_and_save_model("trail_two_data.csv")
+    train_and_save_model("data_v3.csv")
 

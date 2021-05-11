@@ -10,6 +10,7 @@ from featurize import get_all_relations
 
 FIELDS = ["query", "plan", "execution_time (ms)", "tables"]
 
+
 def create_data_set(query, csv_name):
     if not os.path.exists(csv_name):
         with open(csv_name, "w", newline='') as csv_file:
@@ -21,6 +22,7 @@ def create_data_set(query, csv_name):
         with open(csv_name, "a", newline="") as csv_file:
             dict_writer = DictWriter(csv_file, fieldnames=FIELDS)
             add_row(query, dict_writer)
+
 
 def add_row(query, csv_writer):
     output = run_query(query)[0][0][0]
@@ -42,7 +44,6 @@ def get_table_stats(table_name):
         return stats
 
 
-                     
 if __name__ == "__main__":
     #fix error of not dumping to json the explain outputs
     with open("data_v2.csv", "r") as old:

@@ -7,7 +7,6 @@ import json
 ALL_TABLES = ["customer", "lineitem", "nation", "orders", "part", "partsupp", "region", "supplier"]
 
 
-
 def join_matrix(plan):
     """
     :plan dict the explain output from postgres
@@ -27,7 +26,7 @@ def join_matrix(plan):
                 if node_type in JOIN_TYPES:
                     if node_type == "Hash Join" or node_type == "Merge Join":
                         cond = "Hash Cond" if "Hash Cond" in child else "Merge Cond"
-                        joined_tables = [ i for i in re.split('[.= ]', child[cond][1:-1]) if i in all_tables]
+                        joined_tables = [ i for i in re.split('[.= ]', child[cond][1:-1]) if i in ALL_TABLES]
                         key = f'{joined_tables[0]}_{joined_tables[1]}' if f'{joined_tables[0]}_{joined_tables[1]}' in encoding else f'{joined_tables[1]}_{joined_tables[0]}'
                         encoding[key] = 1
                     elif node_type == "Nested Loop":

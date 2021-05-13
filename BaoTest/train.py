@@ -1,6 +1,7 @@
 from csv import DictReader
 import model
 import random
+from dataset_generator import dataset_iter
 class BaoTrainingException(Exception):
     pass
 
@@ -11,18 +12,19 @@ def train_and_save_model(csv_file, verbose=True):
     pairs = []
     tx = []
     ty =[]
-    with open(csv_file, "r") as f:
-        reader = DictReader(f)
-        for i, row in enumerate(reader):
-            pairs.append((row["plan"], row["execution_time (ms)"]))
+    for row in dataset_iter(csv_file):
+        pairs.append((row["plan"], row["execution_time (ms)"]))
 
             
     random.shuffle(pairs)
 
-    x = [i for i, _ in pairs[:290]]
-    y = [i for _, i in pairs[:290]]
-    tx = [i for i, _ in pairs[290:]]
-    ty = [i for _, i in pairs[290:]]       
+    x = [i for i, _ in pairs[:2000]]
+    y = [i for _, i in pairs[:2000]]
+    tx = [i for i, _ in pairs[2000:]]
+    ty = [i for _, i in pairs[2000:]]  
+
+    print(x)
+    print(y)     
     # for _ in range(emphasize_experiments):
     #     all_experience.extend(storage.experiment_experience())
     # if not all_experience:

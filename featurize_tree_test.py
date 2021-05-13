@@ -33,12 +33,13 @@ def get_json_plans(path):
 if __name__ == "__main__":
     
     plans = get_json_plans("json")
+    print(plans)
     
-    tf = TreeFeaturizer()
-    tf.fit(plans)
+    # tf = TreeFeaturizer()
+    # tf.fit(plans)
 
-    output = tf.transform(plans)
-    csv_name = "test_featurize_1.csv"
+    # output = tf.transform(plans)
+    # csv_name = "test_featurize_1.csv"
     
     # FIELDS = ["test"]
     # with open(csv_name, "w", newline='') as csv_file:

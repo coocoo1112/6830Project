@@ -1,9 +1,27 @@
 import psycopg2 as ps
+# postgres_index1 is index instance
+# index1 indices:
+"""
+    part on p_partkey
+    supplier on s_suppkey
+    customer on c_custkey
+    orders on o_orderkey
+
+    lineitem on l_orderkey
+    partsupp on ps_suppkey
+
+    potentially cluster
+
+
+"""
+
+db_name = 'postgres_index1'
+#db_name = 'postgres'
 
 credentials = {
     'POSTGRES_ADDRESS': 'db-test.ch9w9rkl1agb.us-east-2.rds.amazonaws.com',
     'POSTGRES_PORT': '5432', 'POSTGRES_USERNAME': 'postgres',
-    'POSTGRES_PASSWORD': '6830Project', 'POSTGRES_DBNAME': 'postgres'
+    'POSTGRES_PASSWORD': '6830Project', 'POSTGRES_DBNAME': db_name
 }
 
 

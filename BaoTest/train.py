@@ -21,10 +21,10 @@ def train_and_save_model(csv_file, verbose=True):
             
     random.shuffle(pairs)
 
-    x = [i for i, _ in pairs[:2000]]
-    y = [float(i) for _, i in pairs[:2000]]
-    tx = [i for i, _ in pairs[2000:]]
-    ty = [float(i) for _, i in pairs[2000:]]  
+    x = [i for i, _ in pairs[:20000]]
+    y = [float(i) for _, i in pairs[:20000]]
+    tx = [i for i, _ in pairs[20000:]]
+    ty = [float(i) for _, i in pairs[20000:]]  
 
  
     # for _ in range(emphasize_experiments):
@@ -46,6 +46,10 @@ def train_and_save_model(csv_file, verbose=True):
 
     res = np.array([])
     for i in range(len(result)):
+<<<<<<< HEAD
+=======
+        # print("test")
+>>>>>>> cf168a572a76bd946441bbd8f247fe382cfd7941
         res = np.append(res, result[i])
     #print(res)
     # for i in range(len(result)):
@@ -56,10 +60,10 @@ def train_and_save_model(csv_file, verbose=True):
     #print(np.sort(sub))
 
 
-    print(f"MSE: {mean_squared_error(ty, res, squared=False)}")
+    print(f"RMSE: {mean_squared_error(ty, res, squared=False)}")
     # reg.save(fn)
     return reg
 
 if __name__ == "__main__":
-    train_and_save_model("data_v3.csv")
+    train_and_save_model("data_v6.csv")
 

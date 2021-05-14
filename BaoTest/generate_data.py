@@ -115,10 +115,6 @@ def create_data_set(csv_name):
     return f"{int(time.time()-start)} seconds elapsed"
 
 
-    
-
-
-
 if  __name__ == "__main__":
 
     # all queries ran: the point was to test all possible selects that could be made following the logic flow of each function
@@ -132,7 +128,7 @@ if  __name__ == "__main__":
     # results = [test_gen_sql(i) for i in [test_select_1, test_select_2, test_filter_1, test_filter_2, test_join_1, test_join_2]]
     # print(f"Result of my tests: {all(results)}")
     
-    create_data_set("data_v6.csv")
+    create_data_set("data_v7.csv")
 
 
     

@@ -23,10 +23,7 @@ class BaoNet(nn.Module):
         self.__cuda = False
 
         self.tree_conv = nn.Sequential(
-            BinaryTreeConv(self.__in_channels, 512),
-            TreeLayerNorm(),
-            TreeActivation(nn.LeakyReLU()),
-            BinaryTreeConv(512, 256),
+            BinaryTreeConv(self.__in_channels, 256),
             TreeLayerNorm(),
             TreeActivation(nn.LeakyReLU()),
             BinaryTreeConv(256, 128),
@@ -37,10 +34,9 @@ class BaoNet(nn.Module):
             DynamicPooling(),
             nn.Linear(64, 32),
             nn.LeakyReLU(),
-            nn.Linear(32, 16),
-            nn.LeakyReLU(),
-            nn.Linear(16, 1)
+            nn.Linear(32, 1)
         )
+
 
     def in_channels(self):
         return self.__in_channels

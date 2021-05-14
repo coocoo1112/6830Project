@@ -7,7 +7,7 @@ import math
 import os
 import datetime
 
-BUCKET_SIZE = 20
+BUCKET_SIZE = 25
 
 join_types = ["right", "left", "inner"]
 

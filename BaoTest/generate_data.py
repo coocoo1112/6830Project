@@ -103,7 +103,7 @@ def create_data_set(csv_name):
         csv_writer = writer(csv_file)
         csv_writer.writerow(FIELDS)
         dict_writer = DictWriter(csv_file, fieldnames=FIELDS)
-        pool = Pool(processes=None)
+        pool = Pool(processes=4)
         result = pool.imap_unordered(get_explain_output, queries)
         i = 1
         for query, output in result:
@@ -132,7 +132,7 @@ if  __name__ == "__main__":
     # results = [test_gen_sql(i) for i in [test_select_1, test_select_2, test_filter_1, test_filter_2, test_join_1, test_join_2]]
     # print(f"Result of my tests: {all(results)}")
     
-    create_data_set("data_v5.csv")
+    create_data_set("data_v6.csv")
 
 
     

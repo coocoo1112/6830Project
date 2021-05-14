@@ -52,7 +52,7 @@ def get_table_stats(table_name):
 def dataset_iter(csv_name):
     """
     :csv_name is a string, path to csv dataset we want to load
-    :return a generator yielding one row at a time
+    :return a generator yielding one row at a time in our dataset
     """
     if not os.path.exists(csv_name):
         print(f"{csv_name} does not exist")
@@ -84,8 +84,6 @@ if __name__ == "__main__":
                 else:
                     new_row = {f:f for f in FIELDS}
                 writer.writerow(new_row)
-
-    
 
 
     # for data in dataset_iter("data_v3.csv"):

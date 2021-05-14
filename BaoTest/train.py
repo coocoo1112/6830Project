@@ -2,6 +2,9 @@ from csv import DictReader
 import model
 import random
 from dataset_generator import dataset_iter
+from sklearn.metrics import mean_squared_error 
+import numpy as np
+
 class BaoTrainingException(Exception):
     pass
 
@@ -23,8 +26,7 @@ def train_and_save_model(csv_file, verbose=True):
     tx = [i for i, _ in pairs[2000:]]
     ty = [i for _, i in pairs[2000:]]  
 
-    print(x)
-    print(y)     
+ 
     # for _ in range(emphasize_experiments):
     #     all_experience.extend(storage.experiment_experience())
     # if not all_experience:
@@ -37,10 +39,19 @@ def train_and_save_model(csv_file, verbose=True):
     reg.fit(x, y)
 
     result = reg.predict(tx)
+    ty = np.array(ty).astype(np.float32)
 
-
+    res = np.array([])
     for i in range(len(result)):
-        print(result[i], ty[i])
+        np.append(res, result[i])
+    for i in range(len(result)):
+        print(ty[i], res[i])
+        print(type(ty[i]), type(res[i]))
+
+    print(ty)
+    print(result)
+
+    print(f"MSE: {mean_squared_error(ty, res, squared=False)}")
     # reg.save(fn)
     return reg
 

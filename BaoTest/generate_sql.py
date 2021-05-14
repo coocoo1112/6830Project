@@ -1,5 +1,4 @@
 from RDS_query import run_query
-#from dataset_generator import create_data_set
 import json
 import sys
 import itertools
@@ -242,9 +241,6 @@ def generate_two_table_joins():
 
     for join in joins:
         actual_join, columns_involved = joins[join]
-        print(actual_join)
-        print(columns_involved)
-        #print(join)
         for i in range(len(actual_join)):
             join_statement = actual_join[i]
             column = columns_involved[i]
@@ -252,15 +248,12 @@ def generate_two_table_joins():
                 query = base_no_filter.format(join[0], join_type, join[1], join_statement)
                 query_agg = base_no_filter_agg.format(join[0], join_type, join[1], join_statement)
                 query_order_0 = base_no_filter_order.format(join[0], join_type, join[1], join_statement, prefixs[join[1]]+column)
-                query_order_1 = base_no_filter_order.format(join[0], join_type, join[1], join_statement, prefixs[join[0]]+column)
+                #query_order_1 = base_no_filter_order.format(join[0], join_type, join[1], join_statement, prefixs[join[0]]+column)
                 query_max_0 = base_no_filter_max.format(prefixs[join[1]]+column, join[0], join_type, join[1], join_statement, prefixs[join[0]]+column)
-                query_max_1 = base_no_filter_max.format(prefixs[join[0]]+column, join[0], join_type, join[1], join_statement, prefixs[join[1]]+column)
-                sqls.extend([query, query_agg, query_order_0, query_order_1, query_max_0, query_max_1])
-                if join[0] != "lineitem" and join[1] != "lineitem":
-                    print([query, query_agg, query_order_0, query_order_1, query_max_0, query_max_1])
-                    return
-
-                
+                #query_max_1 = base_no_filter_max.format(prefixs[join[0]]+column, join[0], join_type, join[1], join_statement, prefixs[join[1]]+column)
+                sqls.extend([query, query_agg, query_order_0, query_max_0])
+               
+             
             percent_inc1, percentiles_table_1, min_val_1, max_val_1 = get_percentiles(join[0], prefixs[join[0]] + column)
             percent_inc_2, percentiles_table_2, min_val_2, max_val_2 = get_percentiles(join[1], prefixs[join[1]] + column)
             if percentiles_table_1 is None or percentiles_table_2 is None:
@@ -283,10 +276,10 @@ def generate_two_table_joins():
                         query = base_filter.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)#columns = 
                         query_agg = base_filter_agg.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2) 
                         query_order_0 = base_filter_order.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[0]]+column)
-                        query_order_1 = base_filter_order.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[1]]+column)
+                        #query_order_1 = base_filter_order.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[1]]+column)
                         query_max_0 = base_filter_max.format(prefixs[join[1]]+column, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[0]]+column)
-                        query_max_1 = base_filter_max.format(prefixs[join[0]]+column, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[1]]+column)
-                        sqls.extend([query, query_agg, query_order_0, query_order_1, query_max_0, query_max_1])
+                        #query_max_1 = base_filter_max.format(prefixs[join[0]]+column, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[1]]+column)
+                        sqls.extend([query, query_agg, query_order_0, query_max_0])
                         
 
     return sqls

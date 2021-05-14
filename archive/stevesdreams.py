@@ -172,3 +172,21 @@ if __name__ == "__main__":
     #     print(x)
 
     one_time_process("trail_two_data.csv")
+        #fix error of not dumping to json the explain outputs
+    # with open("data_v2.csv", "r") as old:
+    #     reader = DictReader(old, FIELDS[:-1])
+    #     with open("data_v3.csv", "w", newline='') as new:
+    #         writer = DictWriter(new, fieldnames=FIELDS)
+    #         for i, row in enumerate(reader):
+    #             print(f"{i}")
+    #             if i != 0:
+    #                 new_row = {}
+    #                 new_row["query"] = row["query"].replace("ANALYZE true", "ANALYZE false")
+    #                 plan = run_query(new_row["query"])[0][0][0]
+    #                 new_row["plan"] = json.dumps(plan)
+    #                 new_row["tables"] = json.dumps(list(get_all_relations([plan])))
+    #                 new_row["execution_time (ms)"] = row["execution_time (ms)"]
+    #             else:
+    #                 new_row = {f:f for f in FIELDS}
+    #             writer.writerow(new_row)
+    pass

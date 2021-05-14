@@ -827,6 +827,5 @@ def main():
     pdb.set_trace()
     cur.close()
     conn.close()
-
 args = read_flags()
 main()

@@ -6,24 +6,18 @@ credentials = {
     'POSTGRES_PASSWORD': '6830Project', 'POSTGRES_DBNAME': 'postgres'
 }
 
-conn = ps.connect(host=credentials['POSTGRES_ADDRESS'],
+
+
+def connect():
+    conn = ps.connect(host=credentials['POSTGRES_ADDRESS'],
                       database=credentials['POSTGRES_DBNAME'],
                       user=credentials['POSTGRES_USERNAME'],
                       password=credentials['POSTGRES_PASSWORD'],
                       port=credentials['POSTGRES_PORT'])
+    return conn.cursor()
+cursor = connect()
 print("connected!")
-cursor = conn.cursor()
-print(cursor)
-
-# def connect():
-#     conn = ps.connect(host=credentials['POSTGRES_ADDRESS'],
-#                       database=credentials['POSTGRES_DBNAME'],
-#                       user=credentials['POSTGRES_USERNAME'],
-#                       password=credentials['POSTGRES_PASSWORD'],
-#                       port=credentials['POSTGRES_PORT'])
-#     return conn.cursor()
-
-
 def run_query(query):
     cursor.execute(query)
     return cursor.fetchall()
+

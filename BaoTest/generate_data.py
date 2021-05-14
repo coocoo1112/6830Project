@@ -1,7 +1,14 @@
 from generate_sql import generate_selects, generate_filters, generate_two_table_joins, table_columns
 from RDS_query import run_query
-from dataset_generator import create_data_set, dataset_iter, FIELDS
+from multiprocessing import Pool, Lock
+from csv import writer, DictWriter, DictReader
+import os
+import json
+from featurize import get_all_relations
+import time
 
+
+FIELDS = ["query", "plan", "execution_time (ms)", "tables"]
 
 def test_gen_sql(queries):
     """
@@ -24,6 +31,94 @@ def test_create_data_set(queries, csv_name):
             return False
     return True
 
+
+def get_table_stats(table_name):
+    """
+    Use this to get that table stats dict for tables
+    :param table_name : str this is the table name
+    """
+    path = "../table_info/{}_table_stats.json".format(table_name)
+    with open(path, "r") as f:
+        stats = json.load(f)
+        return stats
+
+
+def dataset_iter(csv_name):
+    """
+    :csv_name is a string, path to csv dataset we want to load
+    :return a generator yielding one row at a time in our dataset
+    """
+    if not os.path.exists(csv_name):
+        print(f"{csv_name} does not exist")
+        return
+    else:
+        with open(csv_name, "r") as f:
+            reader = DictReader(f, FIELDS)
+            for i, row in enumerate(reader):
+                if i != 0:
+                    yield {k: v if k not in ["plan", "tables"] else json.loads(v) for k,v in row.items()}
+
+
+def get_queries(table_columns):
+    queries = []
+    queries.extend(generate_two_table_joins())
+    queries.extend(generate_filters(table_columns))
+    selects = generate_selects(table_columns)
+    for table, query in selects.items():
+        queries.extend(query)
+    return queries
+
+
+def get_explain_output(query):
+    """
+    :query str the SQL query
+    :return the query and the explain analyze output
+    """
+    return query, run_query(query)[0][0][0]
+
+
+def make_row_dict(query, output):
+    """
+    :query str the SQL query
+    :output dict the explain output
+    :return dict the row_dict to put into a csv
+    """
+    relations = list(get_all_relations([output]))
+    values = [query, json.dumps(output), output["Execution Time"], json.dumps(relations)]
+    row_dict = {k:v for k, v in zip(FIELDS, values)}
+    return row_dict
+
+
+def create_data_set(csv_name):
+    """
+    make a csv as a dataset
+    """
+    print("starting")
+    start = time.time()
+    queries = get_queries(table_columns)
+    if os.path.exists(csv_name):
+        print(f"{csv_name} already exists")
+        return
+    with open(csv_name, "w", newline='') as csv_file:
+        csv_writer = writer(csv_file)
+        csv_writer.writerow(FIELDS)
+        dict_writer = DictWriter(csv_file, fieldnames=FIELDS)
+        pool = Pool(processes=None)
+        result = pool.imap_unordered(get_explain_output, queries)
+        i = 1
+        for query, output in result:
+            print(f"{i}/{len(queries)} done so far")
+            i += 1
+            row_dict = make_row_dict(query, output)
+            dict_writer.writerow(row_dict)
+    print("DONE!")
+    return f"{int(time.time()-start)} seconds elapsed"
+
+
+    
+
+
+
 if  __name__ == "__main__":
 
     # all queries ran: the point was to test all possible selects that could be made following the logic flow of each function
@@ -36,6 +131,10 @@ if  __name__ == "__main__":
 
     # results = [test_gen_sql(i) for i in [test_select_1, test_select_2, test_filter_1, test_filter_2, test_join_1, test_join_2]]
     # print(f"Result of my tests: {all(results)}")
+    
+    create_data_set("data_v5.csv")
+
+
     
     
 

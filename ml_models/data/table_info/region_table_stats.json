@@ -1,0 +1,48 @@
+{
+    "rows": 5,
+    "content": {
+        "r_regionkey": {
+            "region_r_regionkey_hist_bounds": [
+                0.0,
+                1.0,
+                2.0,
+                3.0,
+                4.0
+            ],
+            "region_r_regionkey_common_vals": null,
+            "region_r_regionkey_avg_width": 4,
+            "region_r_regionkey_null_frac": 0.0,
+            "region_r_regionkey_n_distinct": -1.0,
+            "region_r_regionkey_correlation": 1.0
+        },
+        "r_name": {
+            "region_r_name_hist_bounds": [
+                "\"AFRICA                   \"",
+                "\"AMERICA                  \"",
+                "\"ASIA                     \"",
+                "\"EUROPE                   \"",
+                "\"MIDDLE EAST              \""
+            ],
+            "region_r_name_common_vals": null,
+            "region_r_name_avg_width": 26,
+            "region_r_name_null_frac": 0.0,
+            "region_r_name_n_distinct": -1.0,
+            "region_r_name_correlation": 1.0
+        },
+        "r_comment": {
+            "region_r_comment_hist_bounds": [
+                "\"ges. thinly even pinto beans ca\"",
+                "\"hs use ironic",
+                "even requests. s\"",
+                "\"lar deposits. blithely final packages cajole. regular waters are final requests. regular accounts are according to \"",
+                "\"ly final courts cajole furiously final excuse\"",
+                "\"uickly special accounts cajole carefully blithely close requests. carefully final asymptotes haggle furiousl\""
+            ],
+            "region_r_comment_common_vals": null,
+            "region_r_comment_avg_width": 67,
+            "region_r_comment_null_frac": 0.0,
+            "region_r_comment_n_distinct": -1.0,
+            "region_r_comment_correlation": 0.6
+        }
+    }
+}

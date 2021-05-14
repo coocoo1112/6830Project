@@ -1,0 +1,303 @@
+query,execution_time,table1_stats_filepath,table2_stats_filepath
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_suppkey, s_nationkey, s_address, s_name, s_comment, s_phone, s_acctbal from supplier ;",24.496,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_size, p_mfgr, p_container, p_brand, p_type, p_retailprice, p_comment from part ;",240.244,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_suppkey, s_address, s_name, s_comment, s_phone from supplier ;",21.502,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_suppkey, l_extendedprice, l_partkey, l_discount, l_shipinstruct, l_shipmode, l_quantity, l_receiptdate, l_linenumber, l_tax, l_orderkey, l_comment, l_shipdate from lineitem ;",14037.071,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_commitdate, l_extendedprice, l_suppkey, l_shipmode, l_quantity, l_comment from lineitem ;",14346.491,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_nationkey from supplier ;",23.65,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_orderkey, l_comment from lineitem ;",14330.815,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_partkey, l_discount, l_shipmode, l_tax, l_orderkey, l_comment from lineitem ;",14377.29,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_suppkey, l_returnflag, l_receiptdate, l_tax from lineitem ;",14517.322,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_suppkey, l_returnflag, l_discount, l_quantity, l_linenumber, l_comment from lineitem ;",14422.97,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_clerk, o_custkey, o_totalprice, o_comment, o_orderpriority from orders ;",2437.669,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_address, c_nationkey, c_acctbal, c_comment, c_phone from customer ;",184.469,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_name, s_phone, s_nationkey from supplier ;",20.991,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_suppkey, s_nationkey, s_comment, s_phone, s_acctbal from supplier ;",21.679,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select ps_supplycost, ps_comment, ps_availqty, ps_partkey, ps_suppkey from partsupp ;",1158.981,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_discount, l_extendedprice, l_returnflag from lineitem ;",13884.411,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_mfgr, p_comment from part ;",233.211,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_shipdate from lineitem ;",14755.082,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_name, p_size, p_mfgr, p_partkey, p_comment from part ;",236.549,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select ps_supplycost, ps_comment, ps_availqty from partsupp ;",871.994,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select ps_supplycost, ps_comment, ps_partkey, ps_suppkey from partsupp ;",868.871,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_mktsegment, c_address, c_nationkey, c_name, c_acctbal, c_comment, c_phone from customer ;",277.617,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_suppkey, l_partkey, l_returnflag, l_shipmode, l_quantity, l_receiptdate, l_linenumber, l_tax, l_orderkey, l_comment, l_shipdate from lineitem ;",13785.135,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_totalprice, o_orderstatus, o_orderdate, o_comment, o_orderpriority, o_shippriority from orders ;",2423.646,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_mktsegment, c_name, c_acctbal, c_comment, c_phone, c_custkey from customer ;",178.653,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select ps_supplycost, ps_availqty, ps_suppkey from partsupp ;",1179.61,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_suppkey, l_shipmode, l_linenumber, l_comment, l_shipdate from lineitem ;",13603.843,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_size, p_mfgr, p_container, p_brand, p_type, p_retailprice from part ;",238.699,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_returnflag, l_discount, l_shipmode, l_quantity, l_linenumber, l_comment from lineitem ;",14217.981,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_retailprice, p_partkey, p_mfgr, p_container from part ;",229.936,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_clerk, o_custkey, o_totalprice, o_orderstatus, o_comment, o_orderpriority from orders ;",2418.782,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_orderstatus, o_custkey from orders ;",1747.977,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_comment, o_clerk, o_totalprice from orders ;",1671.143,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_suppkey, l_returnflag, l_partkey, l_shipmode, l_receiptdate, l_shipdate from lineitem ;",14092.406,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_comment from customer ;",184.245,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_suppkey, s_phone, s_comment from supplier ;",21.446,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select ps_supplycost, ps_comment, ps_partkey, ps_availqty from partsupp ;",1103.492,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_suppkey, l_extendedprice, l_returnflag, l_discount, l_shipinstruct, l_receiptdate, l_tax, l_orderkey from lineitem ;",13851.3,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_type, p_retailprice from part ;",229.037,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_name, c_mktsegment, c_custkey from customer ;",171.905,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_custkey, o_totalprice, o_orderstatus, o_comment, o_shippriority from orders ;",2406.659,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_name from part ;",205.965,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select ps_supplycost, ps_partkey from partsupp ;",1074.889,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_clerk, o_custkey, o_totalprice, o_orderdate, o_comment, o_orderpriority, o_shippriority, o_orderkey from orders ;",2836.672,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_discount, l_comment, l_shipinstruct from lineitem ;",13684.432,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_clerk, o_custkey, o_totalprice, o_orderstatus, o_orderdate, o_orderpriority, o_shippriority, o_orderkey from orders ;",2915.179,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_name, s_suppkey from supplier ;",19.911,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_nationkey from nation ;",0.059,nation_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_nationkey, s_address, s_name, s_comment, s_acctbal from supplier ;",21.434,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_commitdate, l_linestatus, l_shipinstruct from lineitem ;",14175.992,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_acctbal from customer ;",173.151,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_size, p_mfgr, p_retailprice, p_container, p_type from part ;",233.318,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select r_regionkey, r_comment from region ;",0.059,region_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_clerk, o_custkey, o_totalprice, o_comment, o_orderpriority, o_shippriority, o_orderkey from orders ;",1988.433,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_nationkey, s_address, s_name, s_comment, s_phone, s_acctbal from supplier ;",21.618,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_commitdate, l_suppkey, l_extendedprice, l_partkey, l_returnflag, l_discount, l_shipinstruct, l_receiptdate, l_tax, l_orderkey from lineitem ;",14643.97,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_orderstatus, o_orderdate, o_clerk, o_orderkey from orders ;",1993.506,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_address, c_nationkey, c_name, c_acctbal, c_comment, c_phone, c_custkey from customer ;",185.226,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_extendedprice, l_partkey, l_returnflag, l_discount, l_shipinstruct, l_shipmode, l_quantity, l_receiptdate, l_linenumber, l_tax, l_orderkey, l_comment, l_shipdate from lineitem ;",14284.807,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_clerk, o_custkey, o_totalprice, o_orderstatus, o_orderdate, o_comment, o_orderpriority, o_shippriority from orders ;",2377.327,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_discount, l_extendedprice, l_orderkey from lineitem ;",14360.658,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_suppkey, l_partkey, l_discount, l_shipinstruct, l_linenumber, l_receiptdate, l_orderkey from lineitem ;",14303.224,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_type from part ;",229.842,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select ps_partkey, ps_availqty, ps_suppkey from partsupp ;",1047.811,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_clerk, o_custkey, o_totalprice, o_orderstatus, o_orderdate, o_comment, o_orderpriority, o_shippriority, o_orderkey from orders ;",2408.296,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_address, s_name, s_comment, s_phone, s_acctbal from supplier ;",65.246,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_name, p_mfgr, p_brand, p_container, p_type, p_retailprice, p_partkey, p_comment from part ;",237.726,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_orderkey from lineitem ;",13978.569,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_comment, o_orderpriority, o_orderkey from orders ;",2933.374,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_totalprice, o_orderstatus, o_orderdate, o_comment, o_shippriority from orders ;",2237.21,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_partkey, p_type from part ;",230.465,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_extendedprice, l_returnflag, l_discount, l_shipinstruct, l_shipmode, l_quantity, l_receiptdate, l_linenumber, l_tax, l_orderkey, l_comment, l_shipdate from lineitem ;",14365.175,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_shippriority, o_totalprice from orders ;",2442.842,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select r_regionkey from region ;",0.051,region_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_address, c_mktsegment from customer ;",177.881,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_commitdate from lineitem ;",14396.17,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_extendedprice, l_partkey, l_discount, l_orderkey, l_shipdate from lineitem ;",14251.848,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_comment, p_name, p_size, p_container from part ;",232.856,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select ps_comment, ps_availqty from partsupp ;",1111.412,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_mfgr, p_retailprice, p_brand, p_type, p_partkey, p_comment from part ;",235.548,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_name, c_acctbal, c_comment, c_phone from customer ;",175.005,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_returnflag, l_shipmode, l_quantity, l_linenumber, l_shipdate from lineitem ;",14043.978,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_name, p_size, p_container, p_brand, p_type, p_retailprice from part ;",256.984,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_nationkey, c_address, c_mktsegment, c_acctbal from customer ;",180.162,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_orderdate from orders ;",2398.763,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_suppkey, l_extendedprice, l_returnflag, l_discount, l_quantity, l_linenumber, l_tax, l_comment, l_shipdate from lineitem ;",14558.107,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_clerk, o_totalprice, o_orderstatus, o_orderdate, o_comment, o_orderpriority, o_shippriority, o_orderkey from orders ;",2800.002,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_commitdate, l_suppkey, l_extendedprice, l_partkey, l_shipinstruct, l_shipmode, l_receiptdate, l_tax, l_orderkey, l_shipdate from lineitem ;",14267.684,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_custkey, o_totalprice, o_orderstatus, o_orderdate, o_comment from orders ;",2018.71,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_custkey from customer ;",193.494,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_shippriority, o_orderkey from orders ;",2840.434,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_partkey, p_container, p_size, p_brand from part ;",228.024,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_retailprice, p_container from part ;",233.183,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_mktsegment, c_address, c_nationkey, c_name, c_acctbal, c_comment, c_phone, c_custkey from customer ;",182.367,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_suppkey, l_extendedprice, l_partkey, l_returnflag, l_discount, l_shipinstruct, l_shipmode, l_receiptdate, l_linenumber, l_tax, l_orderkey, l_comment, l_shipdate from lineitem ;",14340.223,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select p_mfgr, p_name, p_size, p_retailprice from part ;",243.447,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select c_nationkey, c_name, c_comment, c_phone, c_custkey from customer ;",182.821,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select s_address, s_comment from supplier ;",21.444,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select l_linestatus, l_commitdate, l_returnflag, l_partkey, l_shipmode, l_quantity, l_receiptdate, l_tax from lineitem ;",14211.144,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select o_orderpriority, o_orderkey from orders ;",2450.453,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from partsupp        left join lineitem on partsupp.ps_partkey=lineitem.l_partkey        where partsupp.ps_partkey > 301367.0 and lineitem.l_partkey > 298307.0 ;",27133.886,partsupp_table_stats.json,lineitem_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part        right join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 100291.0 and partsupp.ps_partkey > 399973.0 ;",1452.251,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part        right join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 197904.0 and partsupp.ps_partkey > 301367.0 ;",1889.291,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from partsupp        left join lineitem on partsupp.ps_suppkey=lineitem.l_suppkey        where partsupp.ps_suppkey > 4998.0 and lineitem.l_suppkey > 20000.0 ;",18005.719,partsupp_table_stats.json,lineitem_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from partsupp        left join lineitem on partsupp.ps_partkey=lineitem.l_partkey        where partsupp.ps_partkey > 399973.0 and lineitem.l_partkey > 298307.0 ;",18006.809,partsupp_table_stats.json,lineitem_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from orders        left join lineitem on orders.o_orderkey=lineitem.l_orderkey ;",48476.158,orders_table_stats.json,lineitem_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer        right join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 225127.0 ;",5187.931,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from partsupp        left join lineitem on partsupp.ps_partkey=lineitem.l_partkey        where partsupp.ps_partkey > 301367.0 and lineitem.l_partkey > 199567.0 ;",31770.017,partsupp_table_stats.json,lineitem_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer        inner join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 7.0 ;",11331.09,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from orders        inner join lineitem on orders.o_orderkey=lineitem.l_orderkey        where orders.o_orderkey > 3003489.0 and lineitem.l_orderkey > 11999872.0 ;",23494.393,orders_table_stats.json,lineitem_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from partsupp        inner join lineitem on partsupp.ps_partkey=lineitem.l_partkey        where partsupp.ps_partkey > 12.0 and lineitem.l_partkey > 199567.0 ;",42446.077,partsupp_table_stats.json,lineitem_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from region        inner join nation on region.r_regionkey=nation.n_regionkey ;",0.156,region_table_stats.json,nation_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer        left join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 7.0 ;",11345.937,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier        inner join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 10037.0 and partsupp.ps_suppkey > 2.0 ;",2292.628,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer        right join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 299993.0 and orders.o_custkey > 299999.0 ;",3308.78,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part        inner join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 1.0 and partsupp.ps_partkey > 399973.0 ;",1912.974,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer        inner join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 149530.0 and orders.o_custkey > 74380.0 ;",7784.831,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from partsupp        right join lineitem on partsupp.ps_suppkey=lineitem.l_suppkey        where partsupp.ps_suppkey > 10033.0 and lineitem.l_suppkey > 14957.0 ;",279978.753,partsupp_table_stats.json,lineitem_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier        inner join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 1.0 and partsupp.ps_suppkey > 10033.0 ;",2220.839,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_supplycost from partsupp            where ps_supplycost > 249.1 ;",54170.986,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_custkey from customer            where c_custkey > 44100.0 ;",6163.446,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_acctbal from customer            where c_acctbal > 8887.03 ;",2359.864,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_custkey from customer            where c_custkey > 14510.0 ;",5640.903,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 4998.0 ;",28889.346,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_custkey from orders            where o_custkey > 270250.0 ;",58078.589,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 1.0 and partsupp.ps_partkey > 199562.0 ;",4146.016,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 149530.0 and orders.o_custkey > 74380.0 ;",7819.221,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 399980.0 and partsupp.ps_partkey > 301367.0 ;",1123.444,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 399980.0 and partsupp.ps_partkey > 199562.0 ;",2327.345,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 73876.0 and orders.o_custkey > 149324.0 ;",7276.094,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 299999.0 ;",3596.478,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 298062.0 and partsupp.ps_partkey > 301367.0 ;",2030.049,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 197904.0 and partsupp.ps_partkey > 12.0 ;",4958.232,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 5034.0 and partsupp.ps_suppkey > 20000.0 ;",377.796,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 197904.0 and partsupp.ps_partkey > 199562.0 ;",3408.074,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 298062.0 and partsupp.ps_partkey > 199562.0 ;",2239.741,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 100291.0 and partsupp.ps_partkey > 301367.0 ;",2723.598,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 10037.0 and partsupp.ps_suppkey > 10033.0 ;",1979.762,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 100291.0 and partsupp.ps_partkey > 99956.0 ;",4970.127,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 149530.0 and orders.o_custkey > 225127.0 ;",4847.051,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 224101.0 and orders.o_custkey > 299999.0 ;",3467.245,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 224101.0 and orders.o_custkey > 74380.0 ;",6804.248,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join nation on supplier.s_nationkey=nation.n_nationkey ;",42.968,supplier_table_stats.json,nation_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 7.0 ;",11487.22,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 5034.0 and partsupp.ps_suppkey > 4998.0 ;",3109.232,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 20000.0 and partsupp.ps_suppkey > 4998.0 ;",8.28,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 20000.0 and partsupp.ps_suppkey > 10033.0 ;",8.333,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 298062.0 and partsupp.ps_partkey > 399973.0 ;",646.953,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 1.0 and partsupp.ps_partkey > 301367.0 ;",3206.96,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 1.0 and partsupp.ps_suppkey > 20000.0 ;",368.183,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 149324.0 ;",7541.829,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 1.0 and partsupp.ps_suppkey > 4998.0 ;",3626.001,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 20000.0 and partsupp.ps_suppkey > 2.0 ;",8.51,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_totalprice from orders            where o_totalprice > 103144.79 ;",2842.128,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select r_regionkey from region            where r_regionkey > 3.0 ;",0.052,region_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_orderkey from orders            where o_orderkey > 930.0 ;",2534.497,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_suppkey from lineitem            where l_suppkey > 4000.0 ;",13732.709,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_custkey from customer            where c_custkey > 299993.0 ;",87.878,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_partkey from part            where p_partkey > 120913.0 ;",217.235,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 4998.0 ;",1029.037,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 1996.0 ;",993.002,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_extendedprice from lineitem            where l_extendedprice > 47701.83 ;",14273.195,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_availqty from partsupp            where ps_availqty > 5500.0 ;",679.125,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 18967.0 ;",405.2,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_acctbal from supplier            where s_acctbal > 8921.28 ;",10.173,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_orderkey from orders            where o_orderkey > 1187014.0 ;",2594.004,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_retailprice from part            where p_retailprice > 1850.91 ;",133.223,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 15002.0 ;",869.767,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_extendedprice from lineitem            where l_extendedprice > 15242.31 ;",14332.998,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_partkey from partsupp            where ps_partkey > 99956.0 ;",830.499,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_partkey from partsupp            where ps_partkey > 341618.0 ;",444.633,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_partkey from partsupp            where ps_partkey > 399973.0 ;",353.329,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_extendedprice from lineitem            where l_extendedprice > 55105.92 ;",14277.777,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 10033.0 ;",718.918,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_orderkey from orders            where o_orderkey > 10184768.0 ;",2359.742,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_suppkey from lineitem            where l_suppkey > 3011.0 ;",14281.83,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_totalprice from orders            where o_totalprice > 199901.69 ;",2363.022,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_partkey from lineitem            where l_partkey > 379476.0 ;",13806.723,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_acctbal from customer            where c_acctbal > 5013.51 ;",166.748,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_acctbal from supplier            where s_acctbal > 8379.6 ;",11.017,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_suppkey from lineitem            where l_suppkey > 20000.0 ;",14308.12,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_orderkey from lineitem            where l_orderkey > 595810.0 ;",14382.913,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_availqty from partsupp            where ps_availqty > 7034.0 ;",886.61,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_supplycost from partsupp            where ps_supplycost > 149.4 ;",887.724,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_retailprice from part            where p_retailprice > 1148.1 ;",241.147,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_custkey from orders            where o_custkey > 179866.0 ;",2391.193,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_partkey from lineitem            where l_partkey > 19251.0 ;",13857.095,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_extendedprice from lineitem            where l_extendedprice > 29909.76 ;",14945.792,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_partkey from partsupp            where ps_partkey > 220371.0 ;",648.244,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_suppkey from supplier            where s_suppkey > 8040.0 ;",35.289,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_availqty from partsupp            where ps_availqty > 995.0 ;",937.678,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_orderkey from orders            where o_orderkey > 10810465.0 ;",2369.699,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_partkey from part            where p_partkey > 278756.0 ;",143.82,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_retailprice from part            where p_retailprice > 1901.91 ;",125.231,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select r_regionkey from region            where r_regionkey > 4.0 ;",0.043,region_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 9026.0 ;",715.658,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_partkey from part            where p_partkey > 1.0 ;",242.202,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 6026.0 ;",802.94,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_suppkey from lineitem            where l_suppkey > 7009.0 ;",14242.065,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_orderkey from lineitem            where l_orderkey > 2348356.0 ;",14396.566,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_partkey from lineitem            where l_partkey > 138634.0 ;",14357.162,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_partkey from partsupp            where ps_partkey > 199562.0 ;",667.224,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_suppkey from lineitem            where l_suppkey > 11007.0 ;",14167.266,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 5034.0 and partsupp.ps_suppkey > 10033.0 ;",2424.952,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 197904.0 and partsupp.ps_partkey > 12.0 ;",5245.947,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey ;",9028.506,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 299993.0 and orders.o_custkey > 225127.0 ;",4126.08,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 1.0 and partsupp.ps_partkey > 301367.0 ;",3388.476,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 298062.0 and partsupp.ps_partkey > 301367.0 ;",2062.132,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey ;",3910.481,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 149530.0 and orders.o_custkey > 299999.0 ;",3403.337,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 73876.0 and orders.o_custkey > 149324.0 ;",6968.084,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 1.0 and partsupp.ps_suppkey > 4998.0 ;",3159.408,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 224101.0 and orders.o_custkey > 7.0 ;",8732.948,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 10037.0 and partsupp.ps_suppkey > 10033.0 ;",1808.744,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 15018.0 and partsupp.ps_suppkey > 20000.0 ;",452.533,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 197904.0 and partsupp.ps_partkey > 301367.0 ;",2579.342,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 298062.0 and partsupp.ps_partkey > 199562.0 ;",2465.398,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 100291.0 and partsupp.ps_partkey > 12.0 ;",5530.401,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 197904.0 and partsupp.ps_partkey > 399973.0 ;",1473.592,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 197904.0 and partsupp.ps_partkey > 199562.0 ;",3935.497,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 399980.0 and partsupp.ps_partkey > 399973.0 ;",546.215,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 399980.0 and partsupp.ps_partkey > 301367.0 ;",1120.13,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey ;",5189.81,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 5034.0 and partsupp.ps_suppkey > 20000.0 ;",389.439,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 20000.0 and partsupp.ps_suppkey > 15002.0 ;",9.249,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 399980.0 and partsupp.ps_partkey > 12.0 ;",3540.551,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 15018.0 and partsupp.ps_suppkey > 10033.0 ;",1360.405,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 225127.0 ;",5152.756,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 7.0 ;",11666.164,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 1.0 and partsupp.ps_partkey > 12.0 ;",7909.202,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 1.0 and partsupp.ps_suppkey > 2.0 ;",4177.824,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 399980.0 and partsupp.ps_partkey > 99956.0 ;",2566.175,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 5034.0 and partsupp.ps_suppkey > 15002.0 ;",1249.757,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join nation on supplier.s_nationkey=nation.n_nationkey ;",42.914,supplier_table_stats.json,nation_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 73876.0 and orders.o_custkey > 74380.0 ;",9360.964,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 1.0 and partsupp.ps_partkey > 199562.0 ;",4868.887,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 1.0 and partsupp.ps_suppkey > 10033.0 ;",2128.946,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 149530.0 and orders.o_custkey > 225127.0 ;",4783.134,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 299999.0 ;",4126.591,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 32.0 and orders.o_custkey > 149324.0 ;",7213.241,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 149530.0 and orders.o_custkey > 74380.0 ;",8009.454,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from region         join nation on region.r_regionkey=nation.n_regionkey ;",0.155,region_table_stats.json,nation_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 10037.0 and partsupp.ps_suppkey > 20000.0 ;",372.492,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 299993.0 and orders.o_custkey > 7.0 ;",8234.241,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 20000.0 and partsupp.ps_suppkey > 4998.0 ;",8.333,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 299993.0 and orders.o_custkey > 299999.0 ;",3444.726,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 299993.0 and orders.o_custkey > 149324.0 ;",5453.03,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 10037.0 and partsupp.ps_suppkey > 15002.0 ;",1197.284,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from customer         join orders on customer.c_custkey=orders.o_custkey        where customer.c_custkey > 73876.0 and orders.o_custkey > 225127.0 ;",5048.914,customer_table_stats.json,orders_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from part         join partsupp on part.p_partkey=partsupp.ps_partkey        where part.p_partkey > 100291.0 and partsupp.ps_partkey > 301367.0 ;",2678.143,part_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 10037.0 and partsupp.ps_suppkey > 4998.0 ;",2279.716,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from supplier         join partsupp on supplier.s_suppkey=partsupp.ps_suppkey        where supplier.s_suppkey > 1.0 and partsupp.ps_suppkey > 15002.0 ;",1321.222,supplier_table_stats.json,partsupp_table_stats.json
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_orderkey from lineitem            where l_orderkey > 595810.0 ;",13745.876,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_partkey from lineitem            where l_partkey > 19251.0 ;",13860.647,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_partkey from part            where p_partkey > 278756.0 ;",152.695,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_orderkey from orders            where o_orderkey > 4197987.0 ;",2442.675,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_availqty from partsupp            where ps_availqty > 6526.0 ;",733.321,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_extendedprice from lineitem            where l_extendedprice > 33391.34 ;",14283.369,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_retailprice from part            where p_retailprice > 1197.17 ;",232.036,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_acctbal from supplier            where s_acctbal > 5621.87 ;",15.175,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_totalprice from orders            where o_totalprice > 77685.24 ;",2749.843,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_custkey from customer            where c_custkey > 133920.0 ;",165.772,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_orderkey from lineitem            where l_orderkey > 10203968.0 ;",14383.163,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select r_regionkey from region            where r_regionkey > 4.0 ;",0.045,region_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_suppkey from lineitem            where l_suppkey > 6021.0 ;",13868.268,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_orderkey from lineitem            where l_orderkey > 4206566.0 ;",14309.966,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_partkey from part            where p_partkey > 19229.0 ;",245.701,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_availqty from partsupp            where ps_availqty > 3013.0 ;",824.936,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_partkey from part            where p_partkey > 338853.0 ;",124.753,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_custkey from orders            where o_custkey > 88949.0 ;",2403.879,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_suppkey from supplier            where s_suppkey > 1010.0 ;",23.181,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select r_regionkey from region            where r_regionkey > 2.0 ;",0.045,region_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_custkey from orders            where o_custkey > 225127.0 ;",3015.531,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_name from customer            where c_name > 'Customer#000224101' ;",249.028,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_phone from customer            where c_phone > '22-593-812-5142' ;",151.592,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_clerk from orders            where o_clerk > 'Clerk#000000200' ;",3649.138,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_orderdate from orders            where o_orderdate > '1992-08-27' ;",2996.855,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_orderdate from orders            where o_orderdate > '1996-12-09' ;",2564.598,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_clerk from orders            where o_clerk > 'Clerk#000001093' ;",2855.173,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 15002.0 ;",898.427,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_partkey from part            where p_partkey > 1.0 ;",269.442,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_extendedprice from lineitem            where l_extendedprice > 59448.64 ;",13745.922,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_orderkey from lineitem            where l_orderkey > 4816449.0 ;",14485.047,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_name from supplier            where s_name > 'Supplier#000000001       ' ;",45.609,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_comment from orders            where o_comment > 'equests. even theodolites among the slyly even instructions cajole blithel' ;",2652.048,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select o_custkey from orders            where o_custkey > 209780.0 ;",2191.242,orders_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_custkey from customer            where c_custkey > 269314.0 ;",94.449,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 16951.0 ;",791.915,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_phone from customer            where c_phone > '12-573-196-1875' ;",207.824,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_name from nation            where n_name > 'VIETNAM                  ' ;",0.048,nation_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select l_extendedprice from lineitem            where l_extendedprice > 40597.26 ;",14246.813,lineitem_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_name from supplier            where s_name > 'Supplier#000011034       ' ;",36.521,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select c_phone from customer            where c_phone > '23-836-241-7378' ;",158.511,customer_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_suppkey from supplier            where s_suppkey > 7031.0 ;",18.258,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_acctbal from supplier            where s_acctbal > 1725.62 ;",20.461,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_phone from supplier            where s_phone > '22-523-951-5183' ;",19.129,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_name from supplier            where s_name > 'Supplier#000003034       ' ;",42.874,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_name from part            where p_name > 'spring rose powder frosted snow' ;",132.817,part_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select ps_suppkey from partsupp            where ps_suppkey > 15998.0 ;",1078.782,partsupp_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select s_comment from supplier            where s_comment > 'nts nag blithely around the furiously ' ;",18.397,supplier_table_stats.json,
+"EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select p_name from part            where p_name > 'navajo gainsboro beige red lemon' ;",180.936,part_table_stats.json,

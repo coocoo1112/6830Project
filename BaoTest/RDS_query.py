@@ -12,6 +12,9 @@ import psycopg2 as ps
 
     potentially cluster
 
+    clustered: lineitem, partsupp, customer
+    all indices are tablename_idx named
+
 
 """
 

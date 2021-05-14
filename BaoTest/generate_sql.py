@@ -1,7 +1,5 @@
-print("start")
 from RDS_query import run_query
 #from dataset_generator import create_data_set
-print()
 import json
 import sys
 import itertools
@@ -9,6 +7,8 @@ import random
 import math
 import os
 import datetime
+
+BUCKET_SIZE = 20
 
 join_types = ["right", "left", "inner"]
 
@@ -65,11 +65,12 @@ def get_all_stats(tables):
 
 
 tables = [i[0] for i in run_query(tables_query)]
+# print(f'tables: {tables}')
 table_columns = {}
 stats_dict = {}
 
 
-print("\n\n\n\n\n\n")
+# print("\n\n\n\n\n\n")
 for table in tables:
     table_columns[table] = [i[0] for i in run_query(columns_query.format(table))]
     stats_dict[table] = {}
@@ -84,7 +85,7 @@ for stat in stats:
     except:
         print(stat[0])
         sys.exit()
-
+print("stats dict made!")
 def get_set_from_string(set_string):
     #account for date?
     ret_list = []
@@ -107,7 +108,7 @@ def get_percentiles(table, column):
         buckets = get_set_from_string(stats_dict[table][column][0])
         min_val = buckets[0]
         max_val = buckets[-1]
-        bucket_increment = math.ceil((len(buckets) - 1) / 20)
+        bucket_increment = math.ceil((len(buckets) - 1) / BUCKET_SIZE)
         rough_percent = (len(buckets) - 1) / bucket_increment
         for i in range(0,len(buckets), bucket_increment):
             percentiles.append(buckets[i])
@@ -136,6 +137,9 @@ def get_column_subsets(columns):
 
 def generate_selects(table_columns):
     base  = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select {} from {} ;"
+    base_max_1 = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select MAX({}) from {} ;"
+    base_max_mult = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select {}, MAX({}) from {} GROUP BY {};"
+    base_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select {} from {} order by {} ;"
     sqls = {}
     for table in table_columns:
         sqls[table] = []
@@ -143,15 +147,40 @@ def generate_selects(table_columns):
         subsets = get_column_subsets(columns)
         for n in subsets:
             for subset in subsets[n]:
-                filled_base = base.format(subset, table)
+                if n == 0:
+                    continue
+                elif n == 1:
+                    filled_base_max = base_max_1.format(subset, table)
+                    filled_base_order = base_order.format(subset, table, subset)
+                else:
+                    cols = [i.strip() for i in subset.split(",")]
+                    col = random.choice(cols)
+                    rest = ','.join([i for i in cols if i != col])
+                    filled_base_max = base_max_mult.format(rest, col, table, rest)
+                    filled_base_order = base_order.format(subset, table, col)
 
-                sqls[table].append(filled_base)
+                filled_base = base.format(subset, table)
+                sqls[table].extend([filled_base, filled_base_max, filled_base_order])
+               
+  
     return sqls
 
 def generate_filters(table_columns):
     sqls = []
     base = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select {} from {}\
             where {} > {} ;"
+    base_agg = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select count({}) from {}\
+            where {} > {} ;"
+
+    base_agg_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select {} from {}\
+            where {} > {} order by {} ;"
+
+    base_agg_group = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select count({}) from {}\
+            where {} > {} group by {} ;"
+    
+    base_max = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select Max({}) from {}\
+            where {} > {} ;"
+
     for table in table_columns:
         for column in table_columns[table]:
             percent_inc, percentiles_table, min_val, max_val = get_percentiles(table, column)
@@ -159,27 +188,79 @@ def generate_filters(table_columns):
                 continue
             for val in percentiles_table:
                 if type(val) != float:
-                    sqls.append(base.format(column, table, column, "'" + val + "'"))
+                    query = base.format(column, table, column, "'" + val + "'")
+                    query_agg = base_agg.format(column, table, column, "'" + val + "'")
+                    query_agg_order = base_agg_order.format(column, table, column, "'" + val + "'", column)
+                    query_agg_group = base_agg_group.format(column, table, column, "'" + val + "'", column)
+                    sqls.extend([query, query_agg, query_agg_order, query_agg_group])
+
                 else:
-                    sqls.append(base.format(column, table, column, val))
+                    query = base.format(column, table, column, val)
+                    query_agg = base_agg.format(column, table, column, val)
+                    query_agg_order = base_agg_order.format(column, table, column, val, column)
+                    query_agg_group = base_agg_group.format(column, table, column, val, column)
+                    sqls.extend([query, query_agg, query_agg_order, query_agg_group])
+                    
+
+
     return sqls
     
 
-def generate_joins():
+def generate_two_table_joins():
     sqls = []
     base_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
         {} join {} on {}\
         where {}.{} > {} and {}.{} > {} ;"
+
+    base_filter_agg = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select Count(*) from {}\
+    {} join {} on {}\
+    where {}.{} > {} and {}.{} > {} ;"
+
+    base_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
+    {} join {} on {}\
+    where {}.{} > {} and {}.{} > {} order by {} ;"
+
+    base_filter_max = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select Max({}) from {}\
+    {} join {} on {}\
+    where {}.{} > {} and {}.{} > {} group by {} ;"
+
     base_no_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
         {} join {} on {} ;"
+    
+    base_no_filter_agg = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select Count(*) from {}\
+        {} join {} on {} ;"
+    
+    base_no_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
+    {} join {} on {}\
+    order by {} ;"
+
+    base_no_filter_max = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select Max({}) from {}\
+    {} join {} on {}\
+    group by {} ;"
+
+
+
     for join in joins:
         actual_join, columns_involved = joins[join]
-        print(join)
+        print(actual_join)
+        print(columns_involved)
+        #print(join)
         for i in range(len(actual_join)):
             join_statement = actual_join[i]
             column = columns_involved[i]
             for join_type in join_types:
-                sqls.append(base_no_filter.format(join[0], join_type, join[1], join_statement))
+                query = base_no_filter.format(join[0], join_type, join[1], join_statement)
+                query_agg = base_no_filter_agg.format(join[0], join_type, join[1], join_statement)
+                query_order_0 = base_no_filter_order.format(join[0], join_type, join[1], join_statement, prefixs[join[1]]+column)
+                query_order_1 = base_no_filter_order.format(join[0], join_type, join[1], join_statement, prefixs[join[0]]+column)
+                query_max_0 = base_no_filter_max.format(prefixs[join[1]]+column, join[0], join_type, join[1], join_statement, prefixs[join[0]]+column)
+                query_max_1 = base_no_filter_max.format(prefixs[join[0]]+column, join[0], join_type, join[1], join_statement, prefixs[join[1]]+column)
+                sqls.extend([query, query_agg, query_order_0, query_order_1, query_max_0, query_max_1])
+                if join[0] != "lineitem" and join[1] != "lineitem":
+                    print([query, query_agg, query_order_0, query_order_1, query_max_0, query_max_1])
+                    return
+
+                
             percent_inc1, percentiles_table_1, min_val_1, max_val_1 = get_percentiles(join[0], prefixs[join[0]] + column)
             percent_inc_2, percentiles_table_2, min_val_2, max_val_2 = get_percentiles(join[1], prefixs[join[1]] + column)
             if percentiles_table_1 is None or percentiles_table_2 is None:
@@ -191,7 +272,7 @@ def generate_joins():
             tab1_vals = [elm for i, elm in enumerate(percentiles_table_1) if i % 3 == 0]
             tab2_vals = [elm for i, elm in enumerate(percentiles_table_2) if i % 3 == 0]
 
-            print("len of tab 1: {}, len of tab2: {}".format(len(tab1_vals), len(tab2_vals)))
+            #print("len of tab 1: {}, len of tab2: {}".format(len(tab1_vals), len(tab2_vals)))
             for val1 in percentiles_table_1:#tab1_vals:
                 for val2 in percentiles_table_2:#
                     for join_type in join_types:
@@ -199,9 +280,15 @@ def generate_joins():
                             val1 = "'" + val1 + "'"
                         if type(val2) != float:
                             val2 = "'" + val2 + "'"
-                        query = base_filter.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)
-                        #columns = 
-                        sqls.append(query) 
+                        query = base_filter.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)#columns = 
+                        query_agg = base_filter_agg.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2) 
+                        query_order_0 = base_filter_order.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[0]]+column)
+                        query_order_1 = base_filter_order.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[1]]+column)
+                        query_max_0 = base_filter_max.format(prefixs[join[1]]+column, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[0]]+column)
+                        query_max_1 = base_filter_max.format(prefixs[join[0]]+column, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[1]]+column)
+                        sqls.extend([query, query_agg, query_order_0, query_order_1, query_max_0, query_max_1])
+                        
+
     return sqls
             
         
@@ -225,6 +312,14 @@ if __name__ == "__main__":
 
 
     total_sqls = []
+    joins = generate_two_table_joins()
+    print(len(joins))
+    print(len(generate_filters(table_columns)))
+    print(len(generate_selects(table_columns)))
+
+    sel = generate_selects(table_columns)
+    for i in sel:
+        print(len(sel[i]))
     # table_stats = get_all_stats(tables)
     # #json_stats = json.loads(table_stats)
     # print("done")
@@ -235,20 +330,20 @@ if __name__ == "__main__":
     
 
     # done_queries = get_done_queries()
-    print("start")
-    test = generate_selects(table_columns)
-    print([(i, len(test[i])) for i in test])
-    test2 = generate_joins()
+    # print("start")
+    # test = generate_selects(table_columns)
+    # print([(i, len(test[i])) for i in test])
+    # test2 = generate_joins()
     
-    test3 = generate_filters(table_columns)
+    # test3 = generate_filters(table_columns)
     
-    for i in test:
-        total_sqls += test[i]
-    print("step1", len(total_sqls))
-    print("step2", len(test2))
-    print("finished", len(test3))
-    total_sqls += test2
-    total_sqls += test3
+    # for i in test:
+    #     total_sqls += test[i]
+    # print("step1", len(total_sqls))
+    # print("step2", len(test2))
+    # print("finished", len(test3))
+    # total_sqls += test2
+    # total_sqls += test3
     # total_sqls = random.sample(total_sqls, k=100)
     # total_sqls = []
 
@@ -256,27 +351,27 @@ if __name__ == "__main__":
     # total_sqls += random.sample(test3, k=28)
     # print(random.choice(test2))
     # print(random.choice(test3))
-    print(len(total_sqls))
-    table = "data_v2.csv"
-    queries_done = set()
-    not_finished = set()
-    failed_count = 0
-    start = datetime.datetime.now()
-    for i, query in enumerate(total_sqls):
-        print("elapsed time: {}".format(datetime.datetime.now() - start))
-        print(i, "out of ", len(total_sqls))
-        # if query in done_queries:
-        #     continue
-        try:
-            print(query)
-            create_data_set(query, table)
-            queries_done.add(query)
-        except:
-            print("Failed: {}".format(len(not_finished)))
-            not_finished.add(query)
-            print(query)
-    print(queries_done, "\n\n\n\n")
-    print(not_finished)
+    # print(len(total_sqls))
+    # table = "data_v2.csv"
+    # queries_done = set()
+    # not_finished = set()
+    # failed_count = 0
+    # start = datetime.datetime.now()
+    # for i, query in enumerate(total_sqls):
+    #     print("elapsed time: {}".format(datetime.datetime.now() - start))
+    #     print(i, "out of ", len(total_sqls))
+    #     # if query in done_queries:
+    #     #     continue
+    #     try:
+    #         print(query)
+    #         create_data_set(query, table)
+    #         queries_done.add(query)
+    #     except:
+    #         print("Failed: {}".format(len(not_finished)))
+    #         not_finished.add(query)
+    #         print(query)
+    # print(queries_done, "\n\n\n\n")
+    # print(not_finished)
 
     # testidk = ["EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_nationkey from nation ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_regionkey from nation ;"]
     # for idk in testidk:

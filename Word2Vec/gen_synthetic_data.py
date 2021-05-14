@@ -1,15 +1,15 @@
 import numpy as np
 # import pdb
-import ipdb as pdb
+# import ipdb as pdb
 import argparse
 import psycopg2 as pg
 import psycopg2.extras
 import random
 import time
 import subprocess as sp
-from gensim.models import Word2Vec
+# from gensim.models import Word2Vec
 import re
-from utils.utils import *
+# from utils.utils import *
 
 from sklearn.linear_model import LinearRegression
 from sklearn.svm import SVR
@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPRegressor
-from utils.net import SimpleRegression
+# from utils.net import SimpleRegression
 import torch
 import hashlib
 # import pickle
@@ -174,7 +174,7 @@ def read_flags():
 
     ## other vals
     parser.add_argument("--db_host", type=str, required=False,
-            default="localhost")
+            default="db-test.ch9w9rkl1agb.us-east-2.rds.amazonaws.com")
     parser.add_argument("--data_dir", type=str, required=False,
             default="/data/pari/embeddings/synthdb/")
     parser.add_argument("--gen_data", action="store_true")
@@ -302,6 +302,8 @@ def gen_samples(cursor, dtype="str", single_col=True, corr=False):
             for r in rows:
                 val = r[idx+1]
                 if val != None:
+                    print(r)
+                    print(val)
                     formatted_str = "'" + val.replace("'", "''") + "'"
                     req_rows.append(formatted_str)
             # req_rows = ["'"+ r[idx+1].replace("'","''") + "'" for r in rows]
@@ -602,46 +604,46 @@ def predict_analytically(means, covs, X, ytrue=None):
     print("max loss2: ", sorted(losses)[-2])
     return np.array(yhat)
 
-def train_and_predict(train, test, wv):
-    def get_preds(samples, net):
-        # after training
-        x = [s.get_features(wv) for s in samples]
-        y = [s.sel for s in samples]
-        x = to_variable(x).float()
-        pred = net(x)
-        pred = pred.squeeze(1).detach().numpy()
-        return pred
+# def train_and_predict(train, test, wv):
+#     def get_preds(samples, net):
+#         # after training
+#         x = [s.get_features(wv) for s in samples]
+#         y = [s.sel for s in samples]
+#         x = to_variable(x).float()
+#         pred = net(x)
+#         pred = pred.squeeze(1).detach().numpy()
+#         return pred
 
-    inp_len = len(train[0].get_features(wv))
-    net = SimpleRegression(inp_len, inp_len*2, 1)
-    optimizer = torch.optim.SGD(net.parameters(), lr=0.0001)
-    loss_func = torch.nn.MSELoss()
-    num_iter = 0
+#     inp_len = len(train[0].get_features(wv))
+#     net = SimpleRegression(inp_len, inp_len*2, 1)
+#     optimizer = torch.optim.SGD(net.parameters(), lr=0.0001)
+#     loss_func = torch.nn.MSELoss()
+#     num_iter = 0
 
-    while True:
-        # select samples from xtrain
-        batch = random.sample(train, args.minibatch_size)
-        xbatch = [s.get_features(wv) for s in batch]
-        xbatch = to_variable(xbatch).float()
-        ybatch = [s.sel for s in batch]
-        ybatch = to_variable(ybatch).float()
-        pred = net(xbatch)
-        pred = pred.squeeze(1)
-        loss = loss_func(pred, ybatch)
+#     while True:
+#         # select samples from xtrain
+#         batch = random.sample(train, args.minibatch_size)
+#         xbatch = [s.get_features(wv) for s in batch]
+#         xbatch = to_variable(xbatch).float()
+#         ybatch = [s.sel for s in batch]
+#         ybatch = to_variable(ybatch).float()
+#         pred = net(xbatch)
+#         pred = pred.squeeze(1)
+#         loss = loss_func(pred, ybatch)
 
-        if (num_iter % 1000 == 0):
-            print("iter: {}, loss: {}".format(num_iter, loss.item()))
-        if (num_iter > args.max_iter or loss <= 0.00001):
-            break
+#         if (num_iter % 1000 == 0):
+#             print("iter: {}, loss: {}".format(num_iter, loss.item()))
+#         if (num_iter > args.max_iter or loss <= 0.00001):
+#             break
 
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        num_iter += 1
+#         optimizer.zero_grad()
+#         loss.backward()
+#         optimizer.step()
+#         num_iter += 1
 
-    ytrain = get_preds(train, net)
-    yhat = get_preds(test, net)
-    return ytrain, yhat
+#     ytrain = get_preds(train, net)
+#     yhat = get_preds(test, net)
+#     return ytrain, yhat
 
 def get_gaussian_data_params():
     RANGES = []
@@ -675,13 +677,22 @@ def get_gaussian_data_params():
                 covs[j][i] = corr*stds[i]*stds[j]
             # just leave it as 0.
     return means, covs
+credentials = {
+    'POSTGRES_ADDRESS': 'db-test.ch9w9rkl1agb.us-east-2.rds.amazonaws.com',
+    'POSTGRES_PORT': '5432', 'POSTGRES_USERNAME': 'postgres',
+    'POSTGRES_PASSWORD': '6830Project', 'POSTGRES_DBNAME': 'postgres'
+}
 
 def main():
     # TODO: generalize this further.
     # create a table, if it doesn't exist
     columns = get_columns(args.num_columns)
     if args.verbose: print(columns)
-    conn = pg.connect(host=args.db_host, database=args.db_name)
+    conn = pg.connect(host=credentials['POSTGRES_ADDRESS'],
+                      database=credentials['POSTGRES_DBNAME'],
+                      user=credentials['POSTGRES_USERNAME'],
+                      password=credentials['POSTGRES_PASSWORD'],
+                      port=credentials['POSTGRES_PORT'])
     if args.verbose: print("connection succeeded")
     cur = conn.cursor()
 

@@ -685,132 +685,133 @@ def main():
     if args.verbose: print("connection succeeded")
     cur = conn.cursor()
 
-    if args.gen_data:
-        # always creates the table and fills it up with data.
-        cur.execute("DROP TABLE IF EXISTS {TABLE}".format(TABLE=args.table_name))
-        create_sql = CREATE_TABLE_TEMPLATE.format(name = args.table_name,
-                                                 columns = columns)
-        cur.execute(create_sql)
+    # if args.gen_data:
+    #     # always creates the table and fills it up with data.
+    #     cur.execute("DROP TABLE IF EXISTS {TABLE}".format(TABLE=args.table_name))
+    #     create_sql = CREATE_TABLE_TEMPLATE.format(name = args.table_name,
+    #                                              columns = columns)
+    #     cur.execute(create_sql)
 
-    ## creating new table done ##
-    means, covs = get_gaussian_data_params()
+    # ## creating new table done ##
+    # means, covs = get_gaussian_data_params()
 
-    if args.gen_data:
-        # if gen_data isn't on, then presumably, the table SHOULD already
-        # contain data.
-        assert "synth" in args.db_name
-        data = gen_data(means, covs)
-        # insert statement
-        insert_sql = INSERT_TEMPLATE.format(name = args.table_name,
-                                            columns = columns.replace("varchar",
-                                                ""))
-        pg.extras.execute_values(cur, insert_sql, data, template=None,
-                page_size=100)
-        conn.commit()
+    # if args.gen_data:
+    #     # if gen_data isn't on, then presumably, the table SHOULD already
+    #     # contain data.
+    #     assert "synth" in args.db_name
+    #     data = gen_data(means, covs)
+    #     # insert statement
+    #     insert_sql = INSERT_TEMPLATE.format(name = args.table_name,
+    #                                         columns = columns.replace("varchar",
+    #                                             ""))
+    #     pg.extras.execute_values(cur, insert_sql, data, template=None,
+    #             page_size=100)
+    #     conn.commit()
 
     # let's run vacuum to update stats.
-    db_vacuum(conn, cur)
+    # db_vacuum(conn, cur)
 
-    model_name = "wordvec" + gen_args_hash() + ".bin"
-    # if the model exists already, then we can just load it.
-    if not os.path.exists(args.data_dir + model_name) or args.gen_data or args.train_wv:
-        # let us train the wordvec model on this data
-        print("going to train model!")
-        select_sql = "SELECT * FROM {};".format(args.table_name)
-        wv_train = WORDVEC_TEMPLATE.format(db_name = args.db_name,
-                                model_name = model_name,
-                                dir = args.data_dir,
-                                sql = select_sql,
-                                emb_size = args.embedding_size,
-                                min_count = args.min_count,
-                                extra_flags = "")
-                                # extra_flags = "--synthetic_db_debug")
-        p = sp.Popen(wv_train, shell=True)
-        p.wait()
-        print("finished training model!")
-        # load model
-        time.sleep(2)
-    else:
-        print("going to load the saved word2vec model")
-    model = Word2Vec.load(args.data_dir + model_name)
-    wv = model.wv
-    del model
+    # model_name = "wordvec" + gen_args_hash() + ".bin"
+    # # if the model exists already, then we can just load it.
+    # if not os.path.exists(args.data_dir + model_name) or args.gen_data or args.train_wv:
+    #     # let us train the wordvec model on this data
+    #     print("going to train model!")
+    #     select_sql = "SELECT * FROM {};".format(args.table_name)
+    #     wv_train = WORDVEC_TEMPLATE.format(db_name = args.db_name,
+    #                             model_name = model_name,
+    #                             dir = args.data_dir,
+    #                             sql = select_sql,
+    #                             emb_size = args.embedding_size,
+    #                             min_count = args.min_count,
+    #                             extra_flags = "")
+    #                             # extra_flags = "--synthetic_db_debug")
+    #     p = sp.Popen(wv_train, shell=True)
+    #     p.wait()
+    #     print("finished training model!")
+    #     # load model
+    #     time.sleep(2)
+    # else:
+    #     print("going to load the saved word2vec model")
+    # model = Word2Vec.load(args.data_dir + model_name)
+    # wv = model.wv
+    # del model
 
     # both correlated samples, or single column samples will be stored
     # differently.
     samples_fname = args.data_dir + "/samples-" + gen_args_hash() + ".pickle"
-    print("samples fname: ", samples_fname)
-    if os.path.exists(samples_fname) and not args.gen_data:
-        with open(samples_fname, "rb") as f:
-            samples = pickle.loads(f.read())
-        for i, s in enumerate(samples):
-            samples[i] = SelectivitySample(s.column_names, s.vals, s.cmp_ops,
-                    s.sel, s.count, s.pg_sel, s.pg_marginal_sels, s.marginal_sels)
+    # print("samples fname: ", samples_fname)
+    # if os.path.exists(samples_fname) and not args.gen_data:
+    #     with open(samples_fname, "rb") as f:
+    #         samples = pickle.loads(f.read())
+    #     for i, s in enumerate(samples):
+    #         samples[i] = SelectivitySample(s.column_names, s.vals, s.cmp_ops,
+    #                 s.sel, s.count, s.pg_sel, s.pg_marginal_sels, s.marginal_sels)
 
-    else:
-        samples = gen_samples(cur, single_col=(not args.use_corr),
-                corr=args.use_corr)
-        with open(samples_fname, "wb") as f:
-            f.write(pickle.dumps(samples))
+    # else:
+    samples = gen_samples(cur, single_col=(not args.use_corr),
+            corr=args.use_corr)
+    with open(samples_fname, "wb") as f:
+        f.write(pickle.dumps(samples))
     print("got samples!")
+    print(f"number of samples: {len(samples)}")
 
-    train, test = train_test_split(samples, test_size=args.test_size,
-            random_state=args.seed)
-    ytrain = [s.sel for s in train]
-    ytest = [s.sel for s in test]
+    # train, test = train_test_split(samples, test_size=args.test_size,
+    #         random_state=args.seed)
+    # ytrain = [s.sel for s in train]
+    # ytest = [s.sel for s in test]
 
-    ## need to generate yhat
-    if args.scikit:
-        pass
-        # clf = SVR(kernel='rbf', gamma='scale')
-        # classifiers = [LinearRegression(), MLPRegressor()]
-        # for clf in classifiers:
-        # clf = LinearRegression()
-        # clf = MLPRegressor(max_iter=20000, validation_fraction=0.0)
-        # print(clf)
-        # clf.fit(xtrain, ytrain)
-        # yhat = clf.predict(xtest)
-    elif args.pytorch:
-        features = samples[0].get_features(wv)
-        print(len(features), features)
-        xtrain = [s.get_features(wv) for s in train]
-        xtest = [s.get_features(wv) for s in test]
-        yhat_train, yhat = train_and_predict(train, test, wv)
-        train_loss = compute_relative_loss(yhat_train, ytrain)
-        print("training loss: ", train_loss)
+    # ## need to generate yhat
+    # if args.scikit:
+    #     pass
+    #     # clf = SVR(kernel='rbf', gamma='scale')
+    #     # classifiers = [LinearRegression(), MLPRegressor()]
+    #     # for clf in classifiers:
+    #     # clf = LinearRegression()
+    #     # clf = MLPRegressor(max_iter=20000, validation_fraction=0.0)
+    #     # print(clf)
+    #     # clf.fit(xtrain, ytrain)
+    #     # yhat = clf.predict(xtest)
+    # elif args.pytorch:
+    #     features = samples[0].get_features(wv)
+    #     print(len(features), features)
+    #     xtrain = [s.get_features(wv) for s in train]
+    #     xtest = [s.get_features(wv) for s in test]
+    #     yhat_train, yhat = train_and_predict(train, test, wv)
+    #     train_loss = compute_relative_loss(yhat_train, ytrain)
+    #     print("training loss: ", train_loss)
 
-    elif args.analytic:
-        # ignore the training set completely.
-        if args.integrate:
-            yhat = predict_analytically(means, covs, test, ytrue=ytest)
-            print("yhat integrate loss: ", compute_relative_loss(yhat,
-                ytest))
+    # elif args.analytic:
+    #     # ignore the training set completely.
+    #     if args.integrate:
+    #         yhat = predict_analytically(means, covs, test, ytrue=ytest)
+    #         print("yhat integrate loss: ", compute_relative_loss(yhat,
+    #             ytest))
 
-        prob_alg_yhats = []
-        for alg in PROB_ALG_NAMES:
-            yhat = predict_prob(test, wv, alg=alg, ytrue=ytest)
-            prob_alg_yhats.append(yhat)
+    #     prob_alg_yhats = []
+    #     for alg in PROB_ALG_NAMES:
+    #         yhat = predict_prob(test, wv, alg=alg, ytrue=ytest)
+    #         prob_alg_yhats.append(yhat)
 
-        for yhati, yhat in enumerate(prob_alg_yhats):
-            alg_name = PROB_ALG_NAMES[yhati]
-            print("{} loss: {}".format(alg_name, compute_relative_loss(yhat,
-                ytest)))
+    #     for yhati, yhat in enumerate(prob_alg_yhats):
+    #         alg_name = PROB_ALG_NAMES[yhati]
+    #         print("{} loss: {}".format(alg_name, compute_relative_loss(yhat,
+    #             ytest)))
 
-        # yhat_independent_pg = predict_prob(test, wv,
-                    # alg="independent_pg", ytrue=ytest)
-        # yhat_independent_true = predict_analytically(means, covs, test, ytest)
-        # yhat = yhat_independent
+    #     # yhat_independent_pg = predict_prob(test, wv,
+    #                 # alg="independent_pg", ytrue=ytest)
+    #     # yhat_independent_true = predict_analytically(means, covs, test, ytest)
+    #     # yhat = yhat_independent
 
-    # computing results
-    ypg = np.array([s.pg_sel for s in test])
-    pg_loss = compute_relative_loss(ypg, ytest)
-    test_loss = compute_relative_loss(yhat, ytest)
+    # # computing results
+    # ypg = np.array([s.pg_sel for s in test])
+    # pg_loss = compute_relative_loss(ypg, ytest)
+    # test_loss = compute_relative_loss(yhat, ytest)
 
-    print("abs loss: ", sum(abs(yhat-ytest)))
-    print("abs loss pg: ", sum(abs(ypg-ytest)))
+    # print("abs loss: ", sum(abs(yhat-ytest)))
+    # print("abs loss pg: ", sum(abs(ypg-ytest)))
 
-    print("samples: {}, loss test: {} loss pg: {}".\
-            format(len(yhat), test_loss, pg_loss))
+    # print("samples: {}, loss test: {} loss pg: {}".\
+    #         format(len(yhat), test_loss, pg_loss))
 
     pdb.set_trace()
     cur.close()

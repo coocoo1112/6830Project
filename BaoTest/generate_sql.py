@@ -1,5 +1,7 @@
+print("start")
 from RDS_query import run_query
-from dataset_generator import create_data_set
+#from dataset_generator import create_data_set
+print()
 import json
 import sys
 import itertools
@@ -190,8 +192,8 @@ def generate_joins():
             tab2_vals = [elm for i, elm in enumerate(percentiles_table_2) if i % 3 == 0]
 
             print("len of tab 1: {}, len of tab2: {}".format(len(tab1_vals), len(tab2_vals)))
-            for val1 in tab1_vals:#percentiles_table_1:#tab1_vals:
-                for val2 in tab2_vals:#percentiles_table_2:#
+            for val1 in percentiles_table_1:#tab1_vals:
+                for val2 in percentiles_table_2:#
                     for join_type in join_types:
                         if type(val1) != float:
                             val1 = "'" + val1 + "'"

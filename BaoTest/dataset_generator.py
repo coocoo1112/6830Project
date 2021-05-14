@@ -1,7 +1,8 @@
 
 from csv import writer, DictWriter, DictReader
 import os
-from RDS_query import run_query
+#from RDS_query import run_query
+from parallel_query import run_queries
 import json
 import re
 import pickle
@@ -30,8 +31,16 @@ def create_data_set(query, csv_name):
             dict_writer = DictWriter(csv_file, fieldnames=FIELDS)
             add_row(query, dict_writer)
 
+def add_rows(queries, csv_writer):
+    for output in run_queries(queries):
+        output = output[0][0][0]
+    relations = list(get_all_relations([output]))
+    values = [query, json.dumps(output), output["Execution Time"], json.dumps(relations)]
+    row_dict = {k:v for k, v in zip(FIELDS, values)}
+    csv_writer.writerow(row_dict)
 
-def add_row(query, csv_writer):
+
+def add_row(queries, csv_writer):
     output = run_query(query)[0][0][0]
     relations = list(get_all_relations([output]))
     values = [query, json.dumps(output), output["Execution Time"], json.dumps(relations)]

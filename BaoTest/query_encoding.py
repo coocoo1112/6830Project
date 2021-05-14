@@ -115,7 +115,9 @@ if __name__ == "__main__":
     #     columns.extend([i[0] for i in run_query(columns_query.format(t))])
     # print(columns)
     good = True
+    bad = 0
     for i, data in enumerate(dataset_iter("data_v3.csv")):
+        print(data)
         print("-----------")
         print(i)
         try:
@@ -124,7 +126,10 @@ if __name__ == "__main__":
             print(histogram_encoding(data["plan"]))
         except:
             print(f"failed on this plan {data['plan']}")
+            bad += 1
             good = False
         print("-----------")
-    print(f"Result of this test was {good}")
+        
+    print(f"Result of this test was {good} with {bad} failures")
+
     

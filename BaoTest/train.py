@@ -22,9 +22,9 @@ def train_and_save_model(csv_file, verbose=True):
     random.shuffle(pairs)
 
     x = [i for i, _ in pairs[:2000]]
-    y = [i for _, i in pairs[:2000]]
+    y = [float(i) for _, i in pairs[:2000]]
     tx = [i for i, _ in pairs[2000:]]
-    ty = [i for _, i in pairs[2000:]]  
+    ty = [float(i) for _, i in pairs[2000:]]  
 
  
     # for _ in range(emphasize_experiments):
@@ -36,20 +36,29 @@ def train_and_save_model(csv_file, verbose=True):
     #     print("Warning: trying to train a Bao model with fewer than 20 datapoints.")
 
     reg = model.BaoRegression(have_cache_data=False, verbose=verbose)
+    #print(y)
     reg.fit(x, y)
 
     result = reg.predict(tx)
     ty = np.array(ty).astype(np.float32)
+    # print(ty)
+    # print(result)
 
     res = np.array([])
     for i in range(len(result)):
-        np.append(res, result[i])
-    for i in range(len(result)):
-        print(ty[i], res[i])
-        print(type(ty[i]), type(res[i]))
+        print("test")
+        res = np.append(res, result[i])
+    #print(res)
+    # for i in range(len(result)):
+    #     print(ty[i], res[i])
+    #     print(type(ty[i]), type(res[i]))
 
     print(ty)
-    print(result)
+    print(result.flatten())
+    flat_result = result.flatten()
+    sub = np.subtract(flat_result, ty)
+    print(np.sort(sub))
+
 
     print(f"MSE: {mean_squared_error(ty, res, squared=False)}")
     # reg.save(fn)

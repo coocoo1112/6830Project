@@ -1,8 +1,14 @@
 import numpy as np
+import json
+import re
+from generate_data import dataset_iter
 
 JOIN_TYPES = ["Nested Loop", "Hash Join", "Merge Join"]
 LEAF_TYPES = ["Seq Scan", "Index Scan", "Index Only Scan", "Bitmap Index Scan"]
+ALL_TABLES = ["customer", "lineitem", "nation", "orders", "part", "partsupp", "region", "supplier"]
 ALL_TYPES = JOIN_TYPES + LEAF_TYPES
+ROW_LENGTH = len(JOIN_TYPES) + len(LEAF_TYPES) * len(ALL_TABLES)
+
 
 
 class TreeBuilderError(Exception):
@@ -15,10 +21,113 @@ def is_join(node):
 def is_scan(node):
     return node["Node Type"] in LEAF_TYPES
 
+
+class NeoTreeBuilder:
+    def __init__(self):
+        pass
+
+    def __relation_name(self, node):
+        if "Relation Name" in node:
+            return node["Relation Name"]
+
+        #dont think we need this as we dont have bitmap scans?
+        if node["Node Type"] == "Bitmap Index Scan":
+            # find the first (longest) relation name that appears in the index name
+            name_key = "Index Name" if "Index Name" in node else "Relation Name"
+            if name_key not in node:
+                print(node)
+                raise TreeBuilderError("Bitmap operator did not have an index name or a relation name")
+            for rel in self.__relations:
+                if rel in node[name_key]:
+                    return rel
+
+            raise TreeBuilderError("Could not find relation name for bitmap index scan")
+
+        raise TreeBuilderError("Cannot extract relation type from node")
+                
+    def __featurize_join(self, node):
+        assert is_join(node)
+        return self.encode_joins(node["Node Type"], node)
+        print(enc)
+        arr = np.zeros(len(ALL_TYPES))
+        arr[ALL_TYPES.index(node["Node Type"])] = 1
+        return arr
+        return np.concatenate((arr, self.__stats(node)))
+
+    def __featurize_scan(self, node):
+        assert is_scan(node)
+        return self.encode_scans(node["Node Type"], node)
+        arr = np.zeros(len(ALL_TYPES))
+        arr[ALL_TYPES.index(node["Node Type"])] = 1
+        return arr
+
+        return (np.concatenate((arr, self.__stats(node))),
+                self.__relation_name(node))
+    
+    def encode_scans(self, scan_type, node):
+        #will have to be add in index scan logic if adding index scans
+        if scan_type == "Seq Scan" or scan_type == "Index Scan":
+            table = node["Relation Name"]
+            arr = np.zeros(ROW_LENGTH)
+            print(table)
+            print(scan_type)
+            idx = len(JOIN_TYPES) + (ALL_TABLES.index(table) * len(LEAF_TYPES)) + LEAF_TYPES.index(scan_type)
+            arr[idx] = 1
+            return arr
+        else:
+            raise TreeBuilderError("Scan type has not been accounted for")
+
+
+    def encode_joins(self, join_type, node):
+        """
+        :join_type is the join type
+        :child is the node in the postgreSQL tree explain output
+        """
+        if join_type == "Hash Join" or join_type == "Merge Join":
+            arr = np.zeros(ROW_LENGTH)
+            arr[JOIN_TYPES.index(join_type)] = 1
+            return arr
+        else:
+            # bao tree encoding code only considers three join types, this would be a significant refactor
+            raise NameError(f'{join_type} join needs to be accounted for')
+
+
+    def plan_to_feature_tree(self, plan, query_encoding):
+        children = plan["Plans"] if "Plans" in plan else []
+
+        if len(children) == 1:
+            return self.plan_to_feature_tree(children[0], query_encoding)
+
+        if is_join(plan):
+            assert len(children) == 2
+            my_vec = self.__featurize_join(plan)
+            left = self.plan_to_feature_tree(children[0], query_encoding)
+            right = self.plan_to_feature_tree(children[1], query_encoding)
+            left_scan = left[len(query_encoding) + len(JOIN_TYPES):]
+            right_scan = right[len(query_encoding) + len(JOIN_TYPES):]
+            new_arr = np.zeros(len(left_scan))
+            for i in range(len(left_scan)):
+                new_arr[i] = 1 if left_scan[i] == 1 or right_scan[i] == 1 else 0
+            print(my_vec)
+            print(new_arr)
+
+            my_vec = np.concatenate((query_encoding, np.concatenate((my_vec[len(query_encoding):len(query_encoding)+len(JOIN_TYPES)], new_arr))))
+            return (my_vec, left, right)
+
+        if is_scan(plan):
+            assert not children
+            # print(query_encoding)
+            # print(self.__featurize_scan(plan))
+            return np.concatenate((query_encoding, self.__featurize_scan(plan)))
+
+        raise TreeBuilderError("Node wasn't transparent, a join, or a scan: " + str(plan))
+
+
 class TreeBuilder:
     def __init__(self, stats_extractor, relations):
         self.__stats = stats_extractor
         self.__relations = sorted(relations, key=lambda x: len(x), reverse=True)
+        print(self.__relations)
 
     def __relation_name(self, node):
         if "Relation Name" in node:
@@ -69,6 +178,10 @@ class TreeBuilder:
             return self.__featurize_scan(plan)
 
         raise TreeBuilderError("Node wasn't transparent, a join, or a scan: " + str(plan))
+
+
+
+
 
 def norm(x, lo, hi):
     return (np.log(x + 1) - lo) / (hi - lo)
@@ -210,3 +323,22 @@ class TreeFeaturizer:
     def num_operators(self):
         return len(ALL_TYPES)
         
+
+if __name__ == "__main__":
+    print("test")
+    neo = NeoTreeBuilder()
+    csv_file = "data_v3.csv"
+    pairs = []
+    for row in dataset_iter(csv_file):
+        pairs = [row["plan"], row["execution_time (ms)"]]
+        plan = pairs[0]
+        node_type = plan["Plan"]["Node Type"]
+        if node_type == "Hash Join":
+            print(plan["Plan"])
+            break
+   
+    res = neo.plan_to_feature_tree(plan["Plan"], np.array([1,1,1]))
+    print(res)
+    for i in range(len(res)):
+        print(len(res[i]))
+    print(ROW_LENGTH)

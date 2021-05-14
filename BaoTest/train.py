@@ -1,7 +1,7 @@
 from csv import DictReader
 import model
 import random
-from dataset_generator import dataset_iter
+from generate_data import dataset_iter
 from sklearn.metrics import mean_squared_error 
 import numpy as np
 
@@ -46,18 +46,14 @@ def train_and_save_model(csv_file, verbose=True):
 
     res = np.array([])
     for i in range(len(result)):
-        print("test")
         res = np.append(res, result[i])
     #print(res)
     # for i in range(len(result)):
     #     print(ty[i], res[i])
     #     print(type(ty[i]), type(res[i]))
-
-    print(ty)
-    print(result.flatten())
-    flat_result = result.flatten()
-    sub = np.subtract(flat_result, ty)
-    print(np.sort(sub))
+    #flat_result = result.flatten()
+    #sub = np.subtract(flat_result, ty)
+    #print(np.sort(sub))
 
 
     print(f"MSE: {mean_squared_error(ty, res, squared=False)}")

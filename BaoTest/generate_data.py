@@ -120,8 +120,9 @@ def create_data_set(csv_name):
 
 
 if  __name__ == "__main__":
+    pass
 
-    # all queries ran: the point was to test all possible selects that could be made following the logic flow of each function
+    #all queries ran: the point was to test all possible selects that could be made following the logic flow of each function
     test_select_1 = ['EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_name from nation ;', 'EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select MAX(n_name) from nation ;', 'EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_name from nation order by n_name ;']
     test_select_2 = ['EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_name, n_nationkey, n_comment from nation ;', 'EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_name,n_comment, MAX(n_nationkey) from nation GROUP BY n_name,n_comment;', 'EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select n_name, n_nationkey, n_comment from nation order by n_nationkey ;']  
     test_filter_1 = ["EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_name from nation            where n_name > 'ALGERIA                  ' ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select count(n_name) from nation            where n_name > 'ALGERIA                  ' ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select n_name from nation            where n_name > 'ALGERIA                  ' order by n_name ;", "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) select count(n_name) from nation            where n_name > 'ALGERIA                  ' group by n_name ;"]

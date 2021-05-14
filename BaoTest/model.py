@@ -11,6 +11,8 @@ from torch.utils.data import DataLoader
 import net
 from featurize import TreeFeaturizer
 
+import sys
+
 CUDA = torch.cuda.is_available()
 
 def _nn_path(base):
@@ -122,7 +124,11 @@ class BaoRegression:
         y = self.__pipeline.fit_transform(y.reshape(-1, 1)).astype(np.float32)
         
         self.__tree_transform.fit(X)
+        print(X[0])
+        print("\n\n\n")
         X = self.__tree_transform.transform(X)
+        print(X[0])
+        
 
         pairs = list(zip(X, y))
         dataset = DataLoader(pairs,
@@ -158,6 +164,10 @@ class BaoRegression:
         for epoch in range(100):
             loss_accum = 0
             for x, y in dataset:
+                print("\n\n\n\nXXXXXXXXXXXX")
+                print(x[0])
+                print("\n\n\n", y[0])
+                sys.exit()
                 if CUDA:
                     y = y.cuda()
                 y_pred = self.__net(x)

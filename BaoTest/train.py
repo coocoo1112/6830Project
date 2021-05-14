@@ -46,10 +46,7 @@ def train_and_save_model(csv_file, verbose=True):
 
     res = np.array([])
     for i in range(len(result)):
-<<<<<<< HEAD
-=======
         # print("test")
->>>>>>> cf168a572a76bd946441bbd8f247fe382cfd7941
         res = np.append(res, result[i])
     #print(res)
     # for i in range(len(result)):

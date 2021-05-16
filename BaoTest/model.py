@@ -164,10 +164,10 @@ class BaoRegression:
         for epoch in range(100):
             loss_accum = 0
             for x, y in dataset:
-                print("\n\n\n\nXXXXXXXXXXXX")
-                print(x[0])
-                print("\n\n\n", y[0])
-                sys.exit()
+                # print("\n\n\n\nXXXXXXXXXXXX")
+                # print(x[0])
+                # print("\n\n\n", y[0])
+                # sys.exit()
                 if CUDA:
                     y = y.cuda()
                 y_pred = self.__net(x)

@@ -138,8 +138,8 @@ class BaoRegression:
 
         # determine the initial number of channels
         for inp, _tar in dataset:
-            print(f"inp: {inp}")
-            print(f"tar: {_tar}")
+            # print(f"inp: {inp}")
+            # print(f"tar: {_tar}")
             in_channels = inp[0][0].shape[0]
             break
         

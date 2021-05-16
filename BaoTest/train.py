@@ -1,7 +1,7 @@
 from csv import DictReader
 import model
 import random
-from generate_data import dataset_iter
+from data_utils import dataset_iter
 from sklearn.metrics import mean_squared_error 
 import numpy as np
 
@@ -62,5 +62,5 @@ def train_and_save_model(csv_file, verbose=True):
     return reg
 
 if __name__ == "__main__":
-    train_and_save_model("data_v6.csv")
+    train_and_save_model("data_v19.csv")
 

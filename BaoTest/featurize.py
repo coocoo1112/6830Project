@@ -1,7 +1,7 @@
 import numpy as np
 import json
 import re
-from generate_data import dataset_iter
+from data_utils import dataset_iter
 
 JOIN_TYPES = ["Nested Loop", "Hash Join", "Merge Join"]
 LEAF_TYPES = ["Seq Scan", "Index Scan", "Index Only Scan", "Bitmap Index Scan"]

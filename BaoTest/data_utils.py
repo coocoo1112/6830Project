@@ -1,7 +1,7 @@
 from csv import writer, DictWriter, DictReader
 import os
 import json
-from featurize import get_all_relations
+# from featurize import get_all_relations
 import numpy as np
 import pickle
 import matplotlib.pyplot as plot

@@ -20,11 +20,11 @@ def train_and_save_model(csv_file, verbose=True):
 
             
     random.shuffle(pairs)
-
-    x = [i for i, _ in pairs[:20000]]
-    y = [float(i) for _, i in pairs[:20000]]
-    tx = [i for i, _ in pairs[20000:]]
-    ty = [float(i) for _, i in pairs[20000:]]  
+    offset = int(0.75*len(pairs))
+    x = [i for i, _ in pairs[:offset]]
+    y = [float(i) for _, i in pairs[:offset]]
+    tx = [i for i, _ in pairs[offset:]]
+    ty = [float(i) for _, i in pairs[offset:]]  
 
  
     # for _ in range(emphasize_experiments):
@@ -62,5 +62,5 @@ def train_and_save_model(csv_file, verbose=True):
     return reg
 
 if __name__ == "__main__":
-    train_and_save_model("data_v19.csv")
+    train_and_save_model("data_v26.csv")
 

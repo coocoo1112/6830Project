@@ -1,13 +1,16 @@
 import numpy as np
 import json
 import re
-from generate_data import dataset_iter
+import sys
+from data_utils import dataset_iter
+from query_encoding import histogram_encoding, join_matrix, JOIN_TYPES, LEAF_TYPES
 
-JOIN_TYPES = ["Nested Loop", "Hash Join", "Merge Join"]
-LEAF_TYPES = ["Seq Scan", "Index Scan", "Index Only Scan", "Bitmap Index Scan"]
+
+
 ALL_TABLES = ["customer", "lineitem", "nation", "orders", "part", "partsupp", "region", "supplier"]
 ALL_TYPES = JOIN_TYPES + LEAF_TYPES
 ROW_LENGTH = len(JOIN_TYPES) + len(LEAF_TYPES) * len(ALL_TABLES)
+print("Row length:", ROW_LENGTH)
 
 
 
@@ -54,9 +57,12 @@ class NeoTreeBuilder:
         return arr
         return np.concatenate((arr, self.__stats(node)))
 
-    def __featurize_scan(self, node):
+    def __featurize_scan(self, node, query_encoding):
         assert is_scan(node)
-        return self.encode_scans(node["Node Type"], node)
+        # print(query_encoding)
+        # print(self.encode_scans(node["Node Type"], node))
+        first = np.concatenate((np.array(query_encoding), self.encode_scans(node["Node Type"], node)))
+        return (first, self.__relation_name(node))
         arr = np.zeros(len(ALL_TYPES))
         arr[ALL_TYPES.index(node["Node Type"])] = 1
         return arr
@@ -69,8 +75,6 @@ class NeoTreeBuilder:
         if scan_type == "Seq Scan" or scan_type == "Index Scan":
             table = node["Relation Name"]
             arr = np.zeros(ROW_LENGTH)
-            print(table)
-            print(scan_type)
             idx = len(JOIN_TYPES) + (ALL_TABLES.index(table) * len(LEAF_TYPES)) + LEAF_TYPES.index(scan_type)
             arr[idx] = 1
             return arr
@@ -93,6 +97,7 @@ class NeoTreeBuilder:
 
 
     def plan_to_feature_tree(self, plan, query_encoding):
+        # print("QUERY ENCODING SIZE: ", len(query_encoding))
         children = plan["Plans"] if "Plans" in plan else []
 
         if len(children) == 1:
@@ -100,25 +105,35 @@ class NeoTreeBuilder:
 
         if is_join(plan):
             assert len(children) == 2
-            my_vec = self.__featurize_join(plan)
+            my_vec = np.concatenate((query_encoding, self.__featurize_join(plan)))
             left = self.plan_to_feature_tree(children[0], query_encoding)
             right = self.plan_to_feature_tree(children[1], query_encoding)
-            left_scan = left[len(query_encoding) + len(JOIN_TYPES):]
-            right_scan = right[len(query_encoding) + len(JOIN_TYPES):]
+            if len(left) == 2:
+                left_scan = left[0][len(query_encoding) + len(JOIN_TYPES):]
+            else:
+                left_scan = left[len(query_encoding) + len(JOIN_TYPES):]
+            if len(right) == 2:
+                right_scan = right[0][len(query_encoding) + len(JOIN_TYPES):]
+            else: 
+                right_scan = right[len(query_encoding) + len(JOIN_TYPES):]
             new_arr = np.zeros(len(left_scan))
             for i in range(len(left_scan)):
                 new_arr[i] = 1 if left_scan[i] == 1 or right_scan[i] == 1 else 0
             # print(my_vec)
             # print(new_arr)
-
-            my_vec = np.concatenate((query_encoding, np.concatenate((my_vec[len(query_encoding):len(query_encoding)+len(JOIN_TYPES)], new_arr))))
+            my_vec = np.concatenate((my_vec[:len(query_encoding)+len(JOIN_TYPES)], new_arr))
+            # print("MY VEC LEN: ", len(my_vec))
+            # print("Spliced vec len: ", len(new_arr))
+            # print("left size: ", len(left))
+            # print("right size: ", len(right))
+            #my_vec = np.concatenate((query_encoding, np.concatenate((my_vec[len(query_encoding):len(query_encoding)+len(JOIN_TYPES)], new_arr))))
             return (my_vec, left, right)
 
         if is_scan(plan):
             assert not children
             # print(query_encoding)
             # print(self.__featurize_scan(plan))
-            return np.concatenate((query_encoding, self.__featurize_scan(plan)))
+            return self.__featurize_scan(plan, query_encoding)
 
         raise TreeBuilderError("Node wasn't transparent, a join, or a scan: " + str(plan))
 
@@ -304,6 +319,11 @@ def _attach_buf_data(tree):
 
     recurse(tree["Plan"])
 
+def get_query_enc(plan):
+    return np.concatenate((join_matrix(plan), histogram_encoding(plan)))
+
+
+
 class TreeFeaturizer:
     def __init__(self):
         self.__tree_builder = None
@@ -338,7 +358,8 @@ class NeoTreeFeaturizer:
     def transform(self, trees):
         # for t in trees:
         #     _attach_buf_data(t)
-        return [self.__tree_builder.plan_to_feature_tree(x["Plan"]) for x in trees]
+        return [self.__tree_builder.plan_to_feature_tree(x[0]["Plan"], get_query_enc(x[1])) for x in trees]
+
 
     def num_operators(self):
         return len(ALL_TYPES)
@@ -349,16 +370,33 @@ if __name__ == "__main__":
     neo = NeoTreeBuilder()
     csv_file = "data_v3.csv"
     pairs = []
+    fail = 0
+    failed_plans = []
+    i = 1
     for row in dataset_iter(csv_file):
+        print(i)
+        i += 1
         pairs = [row["plan"], row["execution_time (ms)"]]
         plan = pairs[0]
         node_type = plan["Plan"]["Node Type"]
-        if node_type == "Hash Join":
-            print(plan["Plan"])
-            break
-   
-    res = neo.plan_to_feature_tree(plan["Plan"], np.array([1,1,1]))
-    print(res)
-    for i in range(len(res)):
-        print(len(res[i]))
-    print(ROW_LENGTH)
+        try:
+            print(plan)
+            # print(histogram_encoding(plan))
+            # print(join_matrix(plan))
+            query_enc = np.concatenate((join_matrix(plan), histogram_encoding(plan)))
+            print(len(join_matrix(plan)))
+            print(len(histogram_encoding(plan)))
+            print(len(query_enc))
+            neo.plan_to_feature_tree(plan["Plan"], query_enc)
+                
+        except Exception as e:
+            print(e)
+            print(plan)
+            sys.exit()
+            failed_plans.append(plan)
+            fail += 1
+    
+    print(f'there were {fail} failures')
+    # for i in range(len(res)):
+    #     print(len(res[i]))
+    # print(ROW_LENGTH)

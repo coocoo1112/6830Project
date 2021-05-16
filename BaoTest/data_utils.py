@@ -1,7 +1,9 @@
 from csv import writer, DictWriter, DictReader
 import os
 import json
-from featurize import get_all_relations
+#from featurize import get_all_relations
+
+FIELDS = ["query", "plan", "execution_time (ms)", "tables"]
 
 
 def get_table_stats(table_name):

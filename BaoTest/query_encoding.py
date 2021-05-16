@@ -1,12 +1,15 @@
 # from generate_sql import tables
 import numpy as np
-from featurize import JOIN_TYPES, LEAF_TYPES
+# from featurize import JOIN_TYPES, LEAF_TYPES
 import re
 import json
-from RDS_query import run_query
+#from RDS_query import run_query
 # from generate_sql import columns_query 
-from dataset_generator import dataset_iter
+#from dataset_generator import dataset_iter
 
+
+JOIN_TYPES = ["Nested Loop", "Hash Join", "Merge Join"]
+LEAF_TYPES = ["Seq Scan", "Index Scan", "Index Only Scan", "Bitmap Index Scan"]
 ALL_TABLES = ["customer", "lineitem", "nation", "orders", "part", "partsupp", "region", "supplier"]
 COLUMNS = ['c_custkey', 'c_name', 'c_address', 'c_nationkey', 'c_phone', 'c_acctbal', 'c_mktsegment', 'c_comment', 'l_orderkey', 'l_partkey', 'l_suppkey', 'l_linenumber', 'l_quantity', 'l_extendedprice', 'l_discount', 'l_tax', 'l_returnflag', 'l_linestatus', 'l_shipdate', 'l_commitdate', 'l_receiptdate', 'l_shipinstruct', 'l_shipmode', 'l_comment', 'n_nationkey', 'n_name', 'n_regionkey', 'n_comment', 'o_orderkey', 'o_custkey', 'o_orderstatus', 'o_totalprice', 'o_orderdate', 'o_orderpriority', 'o_clerk', 'o_shippriority', 'o_comment', 'p_partkey', 'p_name', 'p_mfgr', 'p_brand', 'p_type', 'p_size', 'p_container', 'p_retailprice', 'p_comment', 'ps_partkey', 'ps_suppkey', 'ps_availqty', 'ps_supplycost', 'ps_comment', 'r_regionkey', 'r_name', 'r_comment', 's_suppkey', 's_name', 's_address', 's_nationkey', 's_phone', 's_acctbal', 's_comment']
 
@@ -53,7 +56,8 @@ def join_matrix(plan):
         for child in plan["Plans"]:
             recurse(child)
 
-    recurse(plan["Plan"])
+    if "Plan" in plan:
+        recurse(plan["Plan"])
     return np.array(ans)
 
 
@@ -97,13 +101,15 @@ def histogram_encoding(plan):
         for child in plan["Plans"]:
             recurse(child)
 
-    recurse(plan["Plan"])
+    if "Plan" in plan:
+        recurse(plan["Plan"])
     return np.array(ans)
 
     
 
 
 if __name__ == "__main__":
+    pass
     # test of join matrix
     # with open("../json/aggregate_join.json", "r") as w:
     #     f = json.load(w)[0][0][0]["Plan"]
@@ -114,22 +120,22 @@ if __name__ == "__main__":
     # for t in ALL_TABLES:
     #     columns.extend([i[0] for i in run_query(columns_query.format(t))])
     # print(columns)
-    good = True
-    bad = 0
-    for i, data in enumerate(dataset_iter("data_v3.csv")):
-        print(data)
-        print("-----------")
-        print(i)
-        try:
-            print(join_matrix(data["plan"]))
-            print()
-            print(histogram_encoding(data["plan"]))
-        except:
-            print(f"failed on this plan {data['plan']}")
-            bad += 1
-            good = False
-        print("-----------")
+    # good = True
+    # bad = 0
+    # for i, data in enumerate(dataset_iter("data_v3.csv")):
+    #     print(data)
+    #     print("-----------")
+    #     print(i)
+    #     try:
+    #         print(join_matrix(data["plan"]))
+    #         print()
+    #         print(histogram_encoding(data["plan"]))
+    #     except:
+    #         print(f"failed on this plan {data['plan']}")
+    #         bad += 1
+    #         good = False
+    #     print("-----------")
         
-    print(f"Result of this test was {good} with {bad} failures")
+    # print(f"Result of this test was {good} with {bad} failures")
 
     

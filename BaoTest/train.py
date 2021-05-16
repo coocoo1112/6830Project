@@ -1,7 +1,7 @@
 from csv import DictReader
 import model
 import random
-from generate_data import dataset_iter
+from data_utils import dataset_iter
 from sklearn.metrics import mean_squared_error 
 import numpy as np
 
@@ -9,22 +9,33 @@ class BaoTrainingException(Exception):
     pass
 
 
-def train_and_save_model(csv_file, verbose=True):
+def train_and_save_model(csv_file, verbose=True, neo=False):
     x = []
     y = []
     pairs = []
     tx = []
     ty =[]
     for row in dataset_iter(csv_file):
-        pairs.append((row["plan"], row["execution_time (ms)"]))
+        if neo:
+            pairs.append((row["query"], row["plan"], row["execution_time (ms)"]))
+        else:
+            pairs.append((row["plan"], row["execution_time (ms)"]))
 
             
     random.shuffle(pairs)
-
-    x = [i for i, _ in pairs[:20000]]
-    y = [float(i) for _, i in pairs[:20000]]
-    tx = [i for i, _ in pairs[20000:]]
-    ty = [float(i) for _, i in pairs[20000:]]  
+    train_percent = .8
+    train_amount = int(len(pairs) * train_percent)
+    print(train_amount)
+    if neo:
+        x = [(p, q) for q, p, r in pairs[:train_amount]]
+        y = [float(r) for q, p, r in pairs[:train_amount]]
+        tx = [(p, q) for q, p, r in pairs[train_amount:]]
+        ty = [float(r) for q, p, r in pairs[train_amount:]]
+    else:
+        x = [i for i, _ in pairs[:train_amount]]
+        y = [float(i) for _, i in pairs[:train_amount]]
+        tx = [i for i, _ in pairs[train_amount:]]
+        ty = [float(i) for _, i in pairs[train_amount:]]  
 
  
     # for _ in range(emphasize_experiments):
@@ -34,10 +45,15 @@ def train_and_save_model(csv_file, verbose=True):
     
     # if len(all_experience) < 20:
     #     print("Warning: trying to train a Bao model with fewer than 20 datapoints.")
+    
 
-    reg = model.BaoRegression(have_cache_data=False, verbose=verbose)
+    reg = model.BaoRegression(have_cache_data=False, verbose=verbose, neo=neo)
     #print(y)
+    print("1")
+    print(np.mean(ty))
+    print(np.std(ty))
     reg.fit(x, y)
+    print("2")
 
     result = reg.predict(tx)
     ty = np.array(ty).astype(np.float32)
@@ -62,5 +78,5 @@ def train_and_save_model(csv_file, verbose=True):
     return reg
 
 if __name__ == "__main__":
-    train_and_save_model("data_v6.csv")
+    train_and_save_model("data_v6.csv", neo=True)
 

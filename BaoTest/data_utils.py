@@ -12,6 +12,9 @@ import math
 FIELDS = ["query", "plan", "execution_time (ms)", "tables"]
 
 
+FIELDS = ["query", "plan", "execution_time (ms)", "tables"]
+
+
 def get_table_stats(table_name):
     """
     Use this to get that table stats dict for tables

@@ -38,6 +38,8 @@ def connect():
     return conn.cursor()
 cursor = connect()
 print("connected!")
+
+
 def run_query(query):
     cursor.execute(query)
     return cursor.fetchall()

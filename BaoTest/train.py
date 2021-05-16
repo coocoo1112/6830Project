@@ -36,6 +36,7 @@ def train_and_save_model(csv_file, verbose=True, neo=False):
         y = [float(i) for _, i in pairs[:train_amount]]
         tx = [i for i, _ in pairs[train_amount:]]
         ty = [float(i) for _, i in pairs[train_amount:]]  
+   
 
  
     # for _ in range(emphasize_experiments):
@@ -78,5 +79,5 @@ def train_and_save_model(csv_file, verbose=True, neo=False):
     return reg
 
 if __name__ == "__main__":
-    train_and_save_model("data_v26.csv", neo=False)
+    train_and_save_model("data_v26.csv")
 

@@ -178,7 +178,11 @@ class BaoRegression:
                 # print("\n\n\n\nXXXXXXXXXXXX")
                 # print(x[0])
                 # print("\n\n\n", y[0])
+<<<<<<< HEAD
                 
+=======
+                # sys.exit()
+>>>>>>> ac515a52fdae7ad00ec41da72b333c2a28c36bc7
                 if CUDA:
                     y = y.cuda()
                 y_pred = self.__net(x)

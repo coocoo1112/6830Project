@@ -71,14 +71,14 @@ class NeoTreeBuilder:
     
     def encode_scans(self, scan_type, node):
         #will have to be add in index scan logic if adding index scans
-        if scan_type == "Seq Scan" or scan_type == "Index Scan":
-            table = node["Relation Name"]
-            arr = np.zeros(ROW_LENGTH)
-            idx = len(JOIN_TYPES) + (ALL_TABLES.index(table) * len(LEAF_TYPES)) + LEAF_TYPES.index(scan_type)
-            arr[idx] = 1
-            return arr
-        else:
-            raise TreeBuilderError("Scan type has not been accounted for")
+        #if scan_type == "Seq Scan" or scan_type == "Index Scan":
+        table = node["Relation Name"]
+        arr = np.zeros(ROW_LENGTH)
+        idx = len(JOIN_TYPES) + (ALL_TABLES.index(table) * len(LEAF_TYPES)) + LEAF_TYPES.index(scan_type)
+        arr[idx] = 1
+        return arr
+        # else:
+        #     raise TreeBuilderError("Scan type has not been accounted for", scan_type)
 
 
     def encode_joins(self, join_type, node):

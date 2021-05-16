@@ -78,9 +78,5 @@ def train_and_save_model(csv_file, verbose=True, neo=False):
     return reg
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    train_and_save_model("data_v6.csv", neo=True)
-=======
-    train_and_save_model("data_v19.csv")
->>>>>>> 6dccd72f66e4c6ab9f7b3619ab8371eab4db9c4c
+    train_and_save_model("data_v26.csv", neo=False)
 

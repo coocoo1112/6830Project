@@ -25,8 +25,10 @@ def is_scan(node):
 
 
 class NeoTreeBuilder:
-    def __init__(self):
-        pass
+    def __init__(self, stats_extractor, relations):
+        self.__stats = stats_extractor
+        self.__relations = sorted(relations, key=lambda x: len(x), reverse=True)
+        print(self.__relations)
 
     def __relation_name(self, node):
         if "Relation Name" in node:
@@ -76,7 +78,7 @@ class NeoTreeBuilder:
         arr = np.zeros(ROW_LENGTH)
         idx = len(JOIN_TYPES) + (ALL_TABLES.index(table) * len(LEAF_TYPES)) + LEAF_TYPES.index(scan_type)
         arr[idx] = 1
-        return arr
+        return np.concatenate((arr, self.__stats(node)))
         # else:
         #     raise TreeBuilderError("Scan type has not been accounted for", scan_type)
 
@@ -89,7 +91,7 @@ class NeoTreeBuilder:
         if join_type == "Hash Join" or join_type == "Merge Join":
             arr = np.zeros(ROW_LENGTH)
             arr[JOIN_TYPES.index(join_type)] = 1
-            return arr
+            return np.concatenate((arr, self.__stats(node)))
         else:
             # bao tree encoding code only considers three join types, this would be a significant refactor
             raise NameError(f'{join_type} join needs to be accounted for')
@@ -330,6 +332,8 @@ class TreeFeaturizer:
     def fit(self, trees):
         for t in trees:
             _attach_buf_data(t)
+        # print(trees[0])
+        # sys.exit()
         all_rels = get_all_relations(trees)
         stats_extractor = get_plan_stats(trees)
         self.__tree_builder = TreeBuilder(stats_extractor, all_rels)
@@ -348,11 +352,13 @@ class NeoTreeFeaturizer:
         self.__tree_builder = None
 
     def fit(self, trees):
-        # for t in trees:
-        #     _attach_buf_data(t)
-        # all_rels = get_all_relations(trees)
-        # stats_extractor = get_plan_stats(trees)
-        self.__tree_builder = NeoTreeBuilder()
+        for t in trees:
+            _attach_buf_data(t)
+        # print(trees[0])
+        # sys.exit()
+        all_rels = get_all_relations([data[0] for data in trees])
+        stats_extractor = get_plan_stats([data[0] for data in trees])
+        self.__tree_builder = NeoTreeBuilder(stats_extractor, all_rels)
 
     def transform(self, trees):
         # for t in trees:

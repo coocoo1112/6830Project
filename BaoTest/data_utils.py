@@ -125,7 +125,7 @@ def get_uniform_params(csv_name, weighted_func):
         #answer.sort(key=lambda x: 0.10*x[0] + 0.9*x[-1])
         candidates = []
         for i, j, k, _ in answer:
-            if i >= 10000 and len(k) >= 8:
+            if i >= 8000:
                 candidates.append((i,j,k, _))
         candidates.sort(key = lambda x: weighted_func(x))
         # print("candidates: ", candidates)
@@ -134,7 +134,7 @@ def get_uniform_params(csv_name, weighted_func):
         else:
             return None
     low = 0
-    high = .5
+    high = .3
     answer = None
     best_so_far = 0
     while low < high:
@@ -143,14 +143,14 @@ def get_uniform_params(csv_name, weighted_func):
         mid = (low+high)/2
         candidate = find_candidate_val(mid)
         if not candidate:
-            high = mid - 0.0125
+            high = mid - 0.001
         else:
             if weighted_func(candidate) >= best_so_far:
                 best_so_far = weighted_func(candidate)
                 answer = candidate
-                low = mid + 0.0125
+                low = mid + 0.001
             else:
-                high = mid - 0.0125
+                high = mid - 0.001
         print(low, high)
         print("-----------")
     print(answer)
@@ -195,6 +195,10 @@ def compute_sample_size(counts, val, epsilon):
         if (1-epsilon)*val <= v:
             total += (1-epsilon)*val
             width.append(k)
+    # for w in width:
+    #     if w > 900:
+    #         print(total, width, epsilon)
+            
     return total, width, epsilon
 
 
@@ -214,9 +218,11 @@ def filter_outliers(new_csv, *args):
         counts.setdefault(time, 0)
         counts[time] += 1
     n = len(total)
+    for x, y in counts.items():
+        print(f"time: {x}, count: {y}")
     x = []
     y = []
-    cutoff = np.quantile(np.array(list(counts.values())), .85)
+    cutoff = np.quantile(np.array(list(counts.values())), .95)
     print(f"cutoff: {cutoff}")
     times = {k for k, v, in counts.items() if v > cutoff}
     queries = {q for q, t, _ in total if t in times}
@@ -274,6 +280,13 @@ def visualize_data(*args, quantile=True):
         plot.scatter(y, x)
         plot.show()
     else:
+        x_ = []
+        y_ = []
+        
+        for _y, _x in counts.items():
+            y_.append(_y)
+            # empirical pdf
+            x_.append(_x/n)
         other_counts = {}
         for real in y:
             other_counts.setdefault(real, 0)
@@ -285,11 +298,17 @@ def visualize_data(*args, quantile=True):
         for k, v in other_counts.items():
             rx.append(k)
             ry.append(v/n)
+        print(x_)
+        print(y_)
         ry = np.array(ry)
         stats = get_stats_dict(ry)
         print(stats)
-        plot.scatter(rx, ry)
+        plot.scatter(y_, x_)
         plot.show()
+        y = np.array([float(i) for i in y])
+        print(y)
+        stats_ = get_stats_dict(y)
+        print(stats_)
         
 
 
@@ -324,5 +343,5 @@ if __name__ == "__main__":
     # print(summarize_dataset("data_v11.csv"))
     #visualize_data("data_v11.csv")
     #print(get_counts("data_v11.csv")[0])
-    # print(make_uniform_dataset("data_v20.csv", "data_v11.csv", lambda x: 1*x[0] + 0.0*len(x[-2])))
-    print(visualize_data("data_v19.csv", quantile=False))
+    # print(make_uniform_dataset("data_v27.csv", "data_v11.csv", lambda x: .20*x[0] + 0.80*max(x[-2])))
+    print(visualize_data("data_v26.csv", quantile=False))

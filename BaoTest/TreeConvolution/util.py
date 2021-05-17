@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import sys
 
 
 class TreeConvolutionError(Exception):
@@ -112,18 +113,25 @@ def _tree_conv_indexes(root, left_child, right_child):
 
 def _pad_and_combine(x):
     assert len(x) >= 1
-    assert len(x[0].shape) == 2
-
+    #assert len(x[0].shape) == 2
+    #print(x)
     for itm in x:
+       # print(len(itm))
         if itm.dtype == np.dtype("object"):
+            continue
             raise TreeConvolutionError(
                 "Transformer outputs could not be unified into an array. "
                 + "Are they all the same size?"
             )
-    
+    #sys.exit()
+    # print(x[0])
+    # print(x[0].shape)
+    #sys.exit()
     second_dim = x[0].shape[1]
-    for itm in x[1:]:
-        assert itm.shape[1] == second_dim
+    #sys.exit()
+    
+    # for itm in x[1:]:
+    #     assert itm.shape[1] == second_dim
 
     max_first_dim = max(arr.shape[0] for arr in x)
 
@@ -136,7 +144,16 @@ def _pad_and_combine(x):
     return np.array(vecs)
 
 def prepare_trees(trees, transformer, left_child, right_child, cuda=False):
+    # print(trees[0])
+    # for x in trees[0]:
+    #     print(len(x))
+    # sys.exit()
     flat_trees = [_flatten(x, transformer, left_child, right_child) for x in trees]
+    # print(flat_trees[0])
+    # for x in flat_trees[0]:
+    #     print(len(x))
+    # sys.exit()
+    
     flat_trees = _pad_and_combine(flat_trees)
     flat_trees = torch.Tensor(flat_trees)
 

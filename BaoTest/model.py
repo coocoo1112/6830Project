@@ -9,7 +9,7 @@ from sklearn.pipeline import Pipeline
 
 from torch.utils.data import DataLoader
 import net
-from featurize import TreeFeaturizer
+from featurize import TreeFeaturizer, NeoTreeFeaturizer
 
 import sys
 
@@ -58,9 +58,10 @@ def collate(x):
     return trees, targets
 
 class BaoRegression:
-    def __init__(self, verbose=False, have_cache_data=False):
+    def __init__(self, verbose=False, have_cache_data=False, neo=False):
         self.__net = None
         self.__verbose = verbose
+        self.neo = neo
 
         log_transformer = preprocessing.FunctionTransformer(
             np.log1p, _inv_log1p,
@@ -70,7 +71,7 @@ class BaoRegression:
         self.__pipeline = Pipeline([("log", log_transformer),
                                     ("scale", scale_transformer)])
         
-        self.__tree_transform = TreeFeaturizer()
+        self.__tree_transform = NeoTreeFeaturizer() if neo else TreeFeaturizer()
         self.__have_cache_data = have_cache_data
         self.__in_channels = None
         self.__n = 0
@@ -122,12 +123,22 @@ class BaoRegression:
         # (assuming the tail behavior exists, TODO investigate
         #  the quantile transformer from scikit)
         y = self.__pipeline.fit_transform(y.reshape(-1, 1)).astype(np.float32)
-        
         self.__tree_transform.fit(X)
-        print(X[0])
-        print("\n\n\n")
         X = self.__tree_transform.transform(X)
-        print(X[0])
+        # print(X[0])
+        # for arr in X[0]:
+        #     print(len(arr))
+        #     try:
+        #         print(len(arr[0]))
+        #     except:
+        #         pass
+        # sys.exit()
+        # if self.neo:
+        #     self.__tree_transform.fit(X[0], X[1])
+        #     X = self.__tree_transform.transform(X[0], X[1])
+        # else:
+        #     self.__tree_transform.fit(X)
+        #     X = self.__tree_transform.transform(X)
         
 
         pairs = list(zip(X, y))
@@ -147,10 +158,10 @@ class BaoRegression:
 
         self.__log("Initial input channels:", in_channels)
 
-        if self.__have_cache_data:
-            assert in_channels == self.__tree_transform.num_operators() + 3
-        else:
-            assert in_channels == self.__tree_transform.num_operators() + 2
+        # if self.__have_cache_data:
+        #     assert in_channels == self.__tree_transform.num_operators() + 3
+        # else:
+        #     assert in_channels == self.__tree_transform.num_operators() + 2
 
         self.__net = net.BaoNet(in_channels)
         self.__in_channels = in_channels
@@ -167,7 +178,11 @@ class BaoRegression:
                 # print("\n\n\n\nXXXXXXXXXXXX")
                 # print(x[0])
                 # print("\n\n\n", y[0])
+<<<<<<< HEAD
+                
+=======
                 # sys.exit()
+>>>>>>> ac515a52fdae7ad00ec41da72b333c2a28c36bc7
                 if CUDA:
                     y = y.cuda()
                 y_pred = self.__net(x)
@@ -180,7 +195,7 @@ class BaoRegression:
 
             loss_accum /= len(dataset)
             losses.append(loss_accum)
-            if epoch % 15 == 0:
+            if epoch % 3 == 0:
                 self.__log("Epoch", epoch, "training loss:", loss_accum)
 
             # stopping condition

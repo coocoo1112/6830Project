@@ -207,33 +207,33 @@ def generate_filters(table_columns):
 
 def generate_two_table_joins():
     sqls = []
-    base_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
+    base_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select * from {}\
         {} join {} on {}\
         where {}.{} > {} and {}.{} > {} ;"
 
-    base_filter_agg = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select Count(*) from {}\
+    base_filter_agg = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select Count(*) from {}\
     {} join {} on {}\
     where {}.{} > {} and {}.{} > {} ;"
 
-    base_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
+    base_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select * from {}\
     {} join {} on {}\
     where {}.{} > {} and {}.{} > {} order by {} ;"
 
-    base_filter_max = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select Max({}) from {}\
+    base_filter_max = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select Max({}) from {}\
     {} join {} on {}\
     where {}.{} > {} and {}.{} > {} group by {} ;"
 
-    base_no_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
+    base_no_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select * from {}\
         {} join {} on {} ;"
     
-    base_no_filter_agg = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select Count(*) from {}\
+    base_no_filter_agg = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select Count(*) from {}\
         {} join {} on {} ;"
     
-    base_no_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select * from {}\
+    base_no_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select * from {}\
     {} join {} on {}\
     order by {} ;"
 
-    base_no_filter_max = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json) Select Max({}) from {}\
+    base_no_filter_max = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select Max({}) from {}\
     {} join {} on {}\
     group by {} ;"
 

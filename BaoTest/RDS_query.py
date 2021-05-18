@@ -1,4 +1,5 @@
 import psycopg2 as ps
+import os
 # postgres_index1 is index instance
 # index1 indices:
 """
@@ -30,19 +31,26 @@ credentials = {
 
 
 
-
 def connect():
+    os.environ["PGOPTIONS"] = '-c statement_timeout=45000'
     conn = ps.connect(host=credentials['POSTGRES_ADDRESS'],
                       database=credentials['POSTGRES_DBNAME'],
                       user=credentials['POSTGRES_USERNAME'],
                       password=credentials['POSTGRES_PASSWORD'],
                       port=credentials['POSTGRES_PORT'])
     return conn.cursor()
+
 cursor = connect()
 print("connected!")
 
 
 def run_query(query):
-    cursor.execute(query)
-    return cursor.fetchall()
+    global cursor
+    try:
+        cursor.execute(query)
+        return cursor.fetchall()
+    except:
+        cursor.close()
+        cursor = connect()
+        raise RuntimeError("Query took too long")
 

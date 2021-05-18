@@ -95,7 +95,7 @@ def create_data_set(csv_name):
         for query, output in result:
             if not output:
                 continue
-            print(f"{i}/{len(queries)} done so far")
+            print(f"{i}/{len(queries)//2} done so far")
             i += 1
             row_dict = make_row_dict(query, output)
             dict_writer.writerow(row_dict)

@@ -9,7 +9,7 @@ from query_encoding import histogram_encoding, join_matrix, JOIN_TYPES, LEAF_TYP
 ALL_TABLES = ["customer", "lineitem", "nation", "orders", "part", "partsupp", "region", "supplier"]
 ALL_TYPES = JOIN_TYPES + LEAF_TYPES
 ROW_LENGTH = len(JOIN_TYPES) + len(LEAF_TYPES) * len(ALL_TABLES)
-print("Row length:", ROW_LENGTH)
+# print("Row length:", ROW_LENGTH)
 
 
 

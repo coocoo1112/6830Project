@@ -18,14 +18,16 @@ import psycopg2 as ps
 
 """
 
-db_name = 'postgres_index1'
+db_name = 'tpch-big'
 #db_name = 'postgres'
-
 credentials = {
-    'POSTGRES_ADDRESS': 'db-test.ch9w9rkl1agb.us-east-2.rds.amazonaws.com',
+    'POSTGRES_ADDRESS': 'tpch-big.cj2xgw6moc7i.us-east-1.rds.amazonaws.com',
     'POSTGRES_PORT': '5432', 'POSTGRES_USERNAME': 'postgres',
     'POSTGRES_PASSWORD': '6830Project', 'POSTGRES_DBNAME': db_name
 }
+
+
+
 
 
 

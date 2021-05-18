@@ -26,6 +26,7 @@ tables_query = "SELECT tablename FROM pg_catalog.pg_tables \
 columns_query = "SELECT column_name FROM information_schema.columns\
     WHERE table_name = '{}';"
 
+
 stats_get = "select histogram_bounds, most_common_vals, tablename, attname FROM pg_stats\
     where tablename in {}"
 
@@ -84,6 +85,9 @@ for stat in stats:
     except:
         print(stat[0])
         sys.exit()
+
+print(stats_dict.keys())
+print(stats_dict['nation'].keys())
 print("stats dict made!")
 def get_set_from_string(set_string):
     #account for date?
@@ -207,7 +211,7 @@ def generate_filters(table_columns):
 
 def generate_two_table_joins():
     sqls = []
-    base_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select * from {}\
+    base_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select {} from {}\
         {} join {} on {}\
         where {}.{} > {} and {}.{} > {} ;"
 
@@ -215,7 +219,7 @@ def generate_two_table_joins():
     {} join {} on {}\
     where {}.{} > {} and {}.{} > {} ;"
 
-    base_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select * from {}\
+    base_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select {} from {}\
     {} join {} on {}\
     where {}.{} > {} and {}.{} > {} order by {} ;"
 
@@ -223,13 +227,13 @@ def generate_two_table_joins():
     {} join {} on {}\
     where {}.{} > {} and {}.{} > {} group by {} ;"
 
-    base_no_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select * from {}\
+    base_no_filter = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select {} from {}\
         {} join {} on {} ;"
     
     base_no_filter_agg = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select Count(*) from {}\
         {} join {} on {} ;"
     
-    base_no_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select * from {}\
+    base_no_filter_order = "EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) Select {} from {}\
     {} join {} on {}\
     order by {} ;"
 
@@ -244,15 +248,15 @@ def generate_two_table_joins():
         for i in range(len(actual_join)):
             join_statement = actual_join[i]
             column = columns_involved[i]
+            project = f"{prefixs[join[0]] + column}, {prefixs[join[1]] + column}"
             for join_type in join_types:
-                query = base_no_filter.format(join[0], join_type, join[1], join_statement)
+                query = base_no_filter.format(project, join[0], join_type, join[1], join_statement)
                 query_agg = base_no_filter_agg.format(join[0], join_type, join[1], join_statement)
-                query_order_0 = base_no_filter_order.format(join[0], join_type, join[1], join_statement, prefixs[join[1]]+column)
-                #query_order_1 = base_no_filter_order.format(join[0], join_type, join[1], join_statement, prefixs[join[0]]+column)
+                query_order_0 = base_no_filter_order.format(project, join[0], join_type, join[1], join_statement, prefixs[join[1]]+column)
                 query_max_0 = base_no_filter_max.format(prefixs[join[1]]+column, join[0], join_type, join[1], join_statement, prefixs[join[0]]+column)
-                #query_max_1 = base_no_filter_max.format(prefixs[join[0]]+column, join[0], join_type, join[1], join_statement, prefixs[join[1]]+column)
                 sqls.extend([query, query_agg, query_order_0, query_max_0])
-               
+                # print([query, query_agg, query_order_0, query_max_0])
+                # return
              
             percent_inc1, percentiles_table_1, min_val_1, max_val_1 = get_percentiles(join[0], prefixs[join[0]] + column)
             percent_inc_2, percentiles_table_2, min_val_2, max_val_2 = get_percentiles(join[1], prefixs[join[1]] + column)
@@ -273,13 +277,14 @@ def generate_two_table_joins():
                             val1 = "'" + val1 + "'"
                         if type(val2) != float:
                             val2 = "'" + val2 + "'"
-                        query = base_filter.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)#columns = 
+                        query = base_filter.format(project, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]] + column, val1, join[1], prefixs[join[1]] + column, val2)#columns = 
                         query_agg = base_filter_agg.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2) 
-                        query_order_0 = base_filter_order.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[0]]+column)
-                        #query_order_1 = base_filter_order.format(join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[1]]+column)
+                        query_order_0 = base_filter_order.format(project, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[0]]+column)
                         query_max_0 = base_filter_max.format(prefixs[join[1]]+column, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[0]]+column)
-                        #query_max_1 = base_filter_max.format(prefixs[join[0]]+column, join[0], join_type, join[1], join_statement, join[0], prefixs[join[0]]+column, val1, join[1], prefixs[join[1]]+column, val2, prefixs[join[1]]+column)
                         sqls.extend([query, query_agg, query_order_0, query_max_0])
+                        # if (join[0] != "lineitem" and join[1] != "lineitem"):
+                        #     print([query, query_agg, query_order_0, query_max_0])
+                        #     return
                         
 
     return sqls
@@ -296,10 +301,6 @@ def get_done_queries():
             queries.add(line.split(";")[0][1:] + ";")
     return queries
             
-
-
-
-
 
 if __name__ == "__main__":
     pass

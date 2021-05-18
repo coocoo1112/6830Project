@@ -125,8 +125,8 @@ def get_uniform_params(csv_name, weighted_func):
         #answer.sort(key=lambda x: 0.10*x[0] + 0.9*x[-1])
         candidates = []
         for i, j, k, _ in answer:
-            if i >= 8000:
-                candidates.append((i,j,k, _))
+            # if i >= 8000:
+            candidates.append((i,j,k, _))
         candidates.sort(key = lambda x: weighted_func(x))
         # print("candidates: ", candidates)
         if candidates:
@@ -134,7 +134,7 @@ def get_uniform_params(csv_name, weighted_func):
         else:
             return None
     low = 0
-    high = .3
+    high = .5
     answer = None
     best_so_far = 0
     while low < high:
@@ -222,7 +222,7 @@ def filter_outliers(new_csv, *args):
         print(f"time: {x}, count: {y}")
     x = []
     y = []
-    cutoff = np.quantile(np.array(list(counts.values())), .95)
+    cutoff = np.quantile(np.array(list(counts.values())), .50)
     print(f"cutoff: {cutoff}")
     times = {k for k, v, in counts.items() if v > cutoff}
     queries = {q for q, t, _ in total if t in times}
@@ -298,8 +298,8 @@ def visualize_data(*args, quantile=True):
         for k, v in other_counts.items():
             rx.append(k)
             ry.append(v/n)
-        print(x_)
-        print(y_)
+        # print(x_)
+        # print(y_)
         ry = np.array(ry)
         stats = get_stats_dict(ry)
         print(stats)
@@ -330,18 +330,19 @@ def get_unique_query_times(*args):
     return total
 
 def round_time(row):
-    return int(math.ceil(float(row["execution_time (ms)"]) / 10.0)) * 10
+    return int(math.ceil(float(row["execution_time (ms)"]) / 100.0)) * 100
 
 
 
 if __name__ == "__main__":
     # these are the RAW datasets i.e no rounding
-    current_data = ["data_v3.csv", "data_v5.csv", "data_v6.csv", "data_v7.csv", "data_v8.csv", "data_v10.csv"]
+    # current_data = ["data_v3.csv", "data_v5.csv", "data_v6.csv", "data_v7.csv", "data_v8.csv", "data_v10.csv"]
+    current_data = ["data_v30.csv", "data_v31.csv"]
     #dataset_stats("stats_data_v0.json", *current_data)
     # visualize_data(*current_data)
-    # filter_outliers("data_v12.csv", *current_data)
+    # filter_outliers("data_v38.csv", *current_data)
     # print(summarize_dataset("data_v11.csv"))
     #visualize_data("data_v11.csv")
     #print(get_counts("data_v11.csv")[0])
-    # print(make_uniform_dataset("data_v27.csv", "data_v11.csv", lambda x: .20*x[0] + 0.80*max(x[-2])))
-    print(visualize_data("data_v26.csv", quantile=False))
+    # print(make_uniform_dataset("data_v42.csv", "data_v38.csv", lambda x: .975*x[0] + 0.025*max(x[-2])))
+    print(visualize_data("data_v39.csv", quantile=False))

@@ -85,7 +85,7 @@ def create_data_set(csv_name):
         csv_writer.writerow(FIELDS)
         dict_writer = DictWriter(csv_file, fieldnames=FIELDS)
         pool = Pool(processes=4)
-        result = pool.imap_unordered(get_explain_output, queries[:len(queries)//2])
+        result = pool.imap_unordered(get_explain_output, queries[len(queries)//2:])
         i = 1
         # for query in queries:
         #     q, plan = get_explain_output(query)
@@ -125,7 +125,7 @@ if  __name__ == "__main__":
     # print(f"Result of my tests: {all(results)}")
     # print(len(generate_two_table_joins()))
     # print(generate_two_table_joins())
-    print(create_data_set("data_v30.csv"))
+    print(create_data_set("data_v31.csv"))
 
 
     

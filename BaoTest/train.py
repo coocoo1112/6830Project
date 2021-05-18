@@ -4,20 +4,30 @@ import random
 from data_utils import dataset_iter
 from sklearn.metrics import mean_squared_error 
 import numpy as np
+import sys
+from gensim.models import Word2Vec
 
 class BaoTrainingException(Exception):
     pass
 
 
-def train_and_save_model(csv_file, verbose=True, neo=False):
+def train_and_save_model(csv_file, verbose=True, neo=False, word2vec=False):
+    query_encoding = True
     x = []
     y = []
     pairs = []
     tx = []
     ty =[]
     for row in dataset_iter(csv_file):
-        if neo:
+        if neo and not word2vec:
             pairs.append((row["query"], row["plan"], row["execution_time (ms)"]))
+        elif neo and word2vec:
+            x = float(row["plan"]["Plan"]["Total Cost"]) if not query_encoding else np.concatenate([histogram_encoding(row["plan"]), join_matrix(row["plan"])]) if not word2vec else [i.strip().replace("'","") for i in row["query"].split()[:-1]][7:]
+            if word2vec:
+                x = [i.strip() for i in x]
+            pair = x, float(row["execution_time (ms)"]) 
+            print(pair)
+            sys.exit()
         else:
             pairs.append((row["plan"], row["execution_time (ms)"]))
 
@@ -79,5 +89,5 @@ def train_and_save_model(csv_file, verbose=True, neo=False):
     return reg
 
 if __name__ == "__main__":
-    train_and_save_model("data_v26.csv", neo=False)
+    train_and_save_model("data_v30.csv", neo=True, word2vec=True)
 

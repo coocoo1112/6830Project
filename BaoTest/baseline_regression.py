@@ -28,7 +28,6 @@ def train(data, offset, query_encoding=False, word=False):
     
     X = [np.array([i]) if not query_encoding else i for i, _ in data]
 
-    
     if word:
         # print("YES")
         # print(X)
@@ -51,7 +50,6 @@ def train(data, offset, query_encoding=False, word=False):
             X_.append(vector)
             X = X_
         
-           
     Y = [np.array([i]) for _, i in data]
     trainOffset = math.floor(offset*len(X))
 

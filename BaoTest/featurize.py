@@ -4,6 +4,7 @@ import re
 import sys
 from data_utils import dataset_iter
 from query_encoding import histogram_encoding, join_matrix, JOIN_TYPES, LEAF_TYPES
+from gensim.models import Word2Vec
 
 
 ALL_TABLES = ["customer", "lineitem", "nation", "orders", "part", "partsupp", "region", "supplier"]
@@ -322,6 +323,26 @@ def _attach_buf_data(tree):
 
 def get_query_enc(plan):
     return np.concatenate((join_matrix(plan), histogram_encoding(plan)))
+
+# def get_word2vec(query):
+#     nlp = Word2Vec(X, window=20, workers=16)
+#     shape = None
+#     for sentence in X:
+#         for word in sentence:
+#             if word in sentence:
+#                 shape = nlp.wv[word].shape
+#                 break
+#         break
+#     X_ = []
+#     for sentence in X:
+#         vector = np.copy(nlp.wv[sentence[0]]) if sentence[0] in nlp.wv else np.zeros(shape)
+#         for word in sentence[1:]:
+#             if word not in nlp.wv:
+#                 vector += np.zeros(shape)
+#             else:
+#                 vector += np.copy(nlp.wv[word])
+#         X_.append(vector)
+#         X = X_
 
 
 

@@ -6,6 +6,7 @@ import json
 #from RDS_query import run_query
 # from generate_sql import columns_query 
 #from dataset_generator import dataset_iter
+# from featurize import get_all_relations
 
 
 JOIN_TYPES = ["Nested Loop", "Hash Join", "Merge Join"]
@@ -105,6 +106,23 @@ def histogram_encoding(plan):
         recurse(plan["Plan"])
     return np.array(ans)
 
+
+# def r_vector_sentence(plan):
+#     """
+#     :plan explain from postgres
+#     :return a sentence to be fed into word vector model
+#     """
+#     rev_mapping_col = {i: c for i,c in enumerate(COLUMNS)}
+#     rev_mapping_join = {i: c for i, c in enumerate(ALL_TABLES)}
+#     hist = histogram_encoding(plan, True)
+#     relations = get_all_relations([plan])
+#     sentence = ""
+#     # sentences are attributes selected for in a predicate and tables joined in a query
+#     for ix, val in enumerate(hist):
+#         if val != 0:
+#             sentence += f"{rev_mapping_col[ix]} "
+#     for relation in relations:
+#             sentence += f"{relation} "
     
 
 

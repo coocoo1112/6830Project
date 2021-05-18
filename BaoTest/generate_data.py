@@ -125,7 +125,7 @@ if  __name__ == "__main__":
     # print(f"Result of my tests: {all(results)}")
     # print(len(generate_two_table_joins()))
     # print(generate_two_table_joins())
-    print(create_data_set("data_v28.csv"))
+    print(create_data_set("data_v30.csv"))
 
 
     

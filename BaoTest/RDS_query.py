@@ -32,7 +32,7 @@ credentials = {
 
 
 def connect():
-    os.environ["PGOPTIONS"] = '-c statement_timeout=45000'
+    os.environ["PGOPTIONS"] = '-c statement_timeout=40000'
     conn = ps.connect(host=credentials['POSTGRES_ADDRESS'],
                       database=credentials['POSTGRES_DBNAME'],
                       user=credentials['POSTGRES_USERNAME'],
@@ -40,6 +40,7 @@ def connect():
                       port=credentials['POSTGRES_PORT'])
     return conn.cursor()
 
+global cursor
 cursor = connect()
 print("connected!")
 
@@ -52,5 +53,6 @@ def run_query(query):
     except:
         cursor.close()
         cursor = connect()
+        print("reconnected due to timeout")
         raise RuntimeError("Query took too long")
 

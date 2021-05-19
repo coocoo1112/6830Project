@@ -1,9 +1,9 @@
 Query Performance predicter
 
 -in order to run our code, you first must set the correct database credentials in BaoTest/RDS_query.py this is important, if you don't do this, you cannot generate data or use the progress bar. Our BaoTest/generate_sql.py is tailored specifically to TPC-H schema and does not generalize.
-
+'''bash
 -to generate a dataset you need to run cd in the BaoTest folder and run python generate_data.py --v [name of csv to save to]
-
+'''
 -to get a plot of a dataset, cd into BaoTest folder and run python data_utils.py --v [dataset name to visualize] --q [if you want to filter out values less than a quantile for yes, type in True] 
 
 -to make a dataset more uniform, cd into BaoTest folder and run python data_utils.py --v [dataset name to make uniform] --n [new dataset name to save to]

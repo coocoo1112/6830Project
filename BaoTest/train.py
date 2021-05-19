@@ -171,6 +171,7 @@ if __name__ == "__main__":
     #if we are training or doing a progress bar
     parser.add_argument("--p", type=lambda x: True if x=='True' else False, default=False, required=False)
     parser.add_argument("--save_word2vec", type=str, default="", required=False)
+    # q for query
     parser.add_argument("--q", type=str, default='', required=False)
     args = parser.parse_args()
     if not args.p:

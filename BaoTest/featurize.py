@@ -2,7 +2,8 @@ import numpy as np
 import json
 import re
 import sys
-from data_utils import dataset_iter
+from data_utils import dataset_iter, get_size_vocab, get_shape_vector, get_word_vector_sentence, get_offset
+import math
 from query_encoding import histogram_encoding, join_matrix, JOIN_TYPES, LEAF_TYPES
 from gensim.models import Word2Vec
 
@@ -26,10 +27,11 @@ def is_scan(node):
 
 
 class NeoTreeBuilder:
-    def __init__(self, stats_extractor, relations):
+    def __init__(self, stats_extractor, relations, word2vec=False):
         self.__stats = stats_extractor
         self.__relations = sorted(relations, key=lambda x: len(x), reverse=True)
         print(self.__relations)
+        self.word2vec = True
 
     def __relation_name(self, node):
         if "Relation Name" in node:
@@ -53,7 +55,7 @@ class NeoTreeBuilder:
     def __featurize_join(self, node):
         assert is_join(node)
         return self.encode_joins(node["Node Type"], node)
-        print(enc)
+        # print(enc)
         arr = np.zeros(len(ALL_TYPES))
         arr[ALL_TYPES.index(node["Node Type"])] = 1
         return arr
@@ -324,26 +326,6 @@ def _attach_buf_data(tree):
 def get_query_enc(plan):
     return np.concatenate((join_matrix(plan), histogram_encoding(plan)))
 
-# def get_word2vec(query):
-#     nlp = Word2Vec(X, window=20, workers=16)
-#     shape = None
-#     for sentence in X:
-#         for word in sentence:
-#             if word in sentence:
-#                 shape = nlp.wv[word].shape
-#                 break
-#         break
-#     X_ = []
-#     for sentence in X:
-#         vector = np.copy(nlp.wv[sentence[0]]) if sentence[0] in nlp.wv else np.zeros(shape)
-#         for word in sentence[1:]:
-#             if word not in nlp.wv:
-#                 vector += np.zeros(shape)
-#             else:
-#                 vector += np.copy(nlp.wv[word])
-#         X_.append(vector)
-#         X = X_
-
 
 
 class TreeFeaturizer:
@@ -368,9 +350,11 @@ class TreeFeaturizer:
         return len(ALL_TYPES)
 
 
+
 class NeoTreeFeaturizer:
-    def __init__(self):
+    def __init__(self, word2vec):
         self.__tree_builder = None
+        self.word2vec = word2vec
 
     def fit(self, trees):
         for t in trees:
@@ -384,12 +368,25 @@ class NeoTreeFeaturizer:
     def transform(self, trees):
         # for t in trees:
         #     _attach_buf_data(t)
-        return [self.__tree_builder.plan_to_feature_tree(x[0]["Plan"], get_query_enc(x[1])) for x in trees]
 
+        # make sentences for word2vec
+        if self.word2vec:
+            offset = get_offset(trees[0][1])
+            sentences = [self.get_sentence(data[1][offset+1:][:-1]) for data in trees]
+            size = math.floor(.1*get_size_vocab(sentences))
+            w2v = Word2Vec(sentences, window=20, workers=16, vector_size = size)
+            shape = get_shape_vector(sentences, w2v)    
+        return [self.__tree_builder.plan_to_feature_tree(x[0]["Plan"], get_query_enc(x[0]["Plan"]))  if not self.word2vec else self.__tree_builder.plan_to_feature_tree(x[0]["Plan"], get_word_vector_sentence(x[1], w2v, shape)) for x in trees]
+
+    
+    def get_sentence(self, query):
+        return [i.strip() for i in query.split()]
 
     def num_operators(self):
         return len(ALL_TYPES)
-        
+    
+    
+    
 
 if __name__ == "__main__":
     print("test")

@@ -58,7 +58,7 @@ def collate(x):
     return trees, targets
 
 class BaoRegression:
-    def __init__(self, verbose=False, have_cache_data=False, neo=False):
+    def __init__(self, verbose=False, have_cache_data=False, neo=False, word2vec=False):
         self.__net = None
         self.__verbose = verbose
         self.neo = neo
@@ -71,7 +71,7 @@ class BaoRegression:
         self.__pipeline = Pipeline([("log", log_transformer),
                                     ("scale", scale_transformer)])
         
-        self.__tree_transform = NeoTreeFeaturizer() if neo else TreeFeaturizer()
+        self.__tree_transform = NeoTreeFeaturizer(word2vec) if neo else TreeFeaturizer()
         self.__have_cache_data = have_cache_data
         self.__in_channels = None
         self.__n = 0

@@ -332,7 +332,83 @@ def get_unique_query_times(*args):
 def round_time(row):
     return int(math.ceil(float(row["execution_time (ms)"]) / 100.0)) * 100
 
+def save_results(result_set_name, results, data_set_name, instance_size=2, neo=False, word2vec=False, regression=False):
+    """
+    :result_set_name is the name of the csv to save to, str
+    :results is a list of rmses from trials
+    :data_set_name is the name the model was trained on
+    :neo, word2vec, bao are flags to see which model (encoding scheme was used)
+    """
+    mode = "a" if os.path.exists(result_set_name) else "w"
+    first =  os.path.exists(result_set_name)
+    fields_ = ["model name", "instance size", "dataset name", "num trials", "avg rmse", "min rmse", "max rmse", "std rmse", "median rmse"]
+    name = "Bao"
+    if neo and not word2vec:
+        name = "Neo"
+    elif word2vec:
+        name = "word2vec"
+    if not neo and not word2vec and regression:
+        name = "postgres cost prediction"
+    name = f"{name} regression" if regression else name
+    # if neo and bao:
+    #     name = "Hybrid"
+    
+    num_trials = len(results)
+    rmse_stats = get_stats_dict(results)
+    with open(result_set_name, mode, newline='') as r:
+        if not first:
+            csv_writer = writer(r)
+            csv_writer.writerow(fields_)
+        row_dict = {"model name": name, "num trials": num_trials, "instance size": instance_size, "dataset name": data_set_name}
+        for i, field_name in enumerate(fields_):
+            stat_name = field_name.split()[0]
+            if stat_name in rmse_stats:
+                row_dict[field_name] = rmse_stats[stat_name]
+        dict_writer = DictWriter(r, fieldnames=fields_)
+        dict_writer.writerow(row_dict)
+        print(f"results saved to {result_set_name} with model type {name}")
+    
 
+def get_size_vocab(sentences):
+    """
+    get number of words our vocab
+    """
+    seen = set()
+    for x in sentences:
+        for word in x:
+            try:
+                if word not in seen:
+                    seen.add(word)
+            # hacky don't know why i needed this
+            except TypeError:
+                for actual_word in word:
+                    if actual_word not in seen:
+                        print(actual_word)
+                        seen.add(actual_word)
+    return len(seen)
+    
+
+def get_word_vector_sentence(sentence, nlp, shape):
+    vector = np.copy(nlp.wv[sentence[0]]) if sentence[0] in nlp.wv else np.zeros(shape)
+    for word in sentence[1:]:
+        if word not in nlp.wv:
+            vector += np.zeros(shape)
+        else:
+            vector += np.copy(nlp.wv[word])
+
+    return vector
+
+def get_shape_vector(sentences, nlp):
+    for sentence in sentences:
+        for word in sentence:
+            if word in sentence:
+                return nlp.wv[word].shape
+
+def get_offset(query):
+    for i, letter in enumerate(query):
+        if letter == ')':
+            return i
+                
 
 if __name__ == "__main__":
     # these are the RAW datasets i.e no rounding
@@ -345,4 +421,5 @@ if __name__ == "__main__":
     #visualize_data("data_v11.csv")
     #print(get_counts("data_v11.csv")[0])
     # print(make_uniform_dataset("data_v42.csv", "data_v38.csv", lambda x: .975*x[0] + 0.025*max(x[-2])))
-    print(visualize_data("data_v39.csv", quantile=False))
+    # print(visualize_data("data_v39.csv", quantile=False))
+    pass

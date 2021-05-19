@@ -104,6 +104,7 @@ def histogram_encoding(plan):
 
     if "Plan" in plan:
         recurse(plan["Plan"])
+    
     return np.array(ans)
 
 

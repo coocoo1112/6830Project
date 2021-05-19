@@ -80,7 +80,8 @@ def train(verbose=True):
         i += 1
         results.append(rmse)
     save_results(args.c, results, args.v, args.s, args.e, args.w, False)
-    torch.save(reg.stat_dict(), args.m)
+    # torch.save(reg.stat_dict(), args.m)
+    reg.save(args.m)
     return reg
 
 
@@ -113,21 +114,18 @@ def progress_bar():
             break
 
     reg = model.BaoRegression(have_cache_data=False, verbose=True, neo=args.e, word2vec=w2v, shape=shape)
-    reg.load_state_dict(torch.load(args.m))
+    reg.load(args.m)
     query = f"EXPLAIN (COSTS true, FORMAT json, BUFFERS true) {args.q}"
     q, output = get_explain_output(query)
-    predicted = reg.predict([output])
+    predicted = reg.predict([output["Plan"]])
     predY = [pred[0] for pred in predicted][0]
     q = queue.Queue()
     i = 1
     started = False
     start = int(round(time.time() * 1000))
     t = Thread(target=target, args=(1,q))
-
-    # eli_count = " "*10000
-    #elapsed = int(round(time.time() * 1000))-start
     t.start()
-    # print("WHAT?")
+
     over_predict = False
     total = math.ceil(predY/1000)
     with tqdm(total=total, position=0, leave=True) as pbar:
@@ -140,7 +138,7 @@ def progress_bar():
             if elapsed >= 5000:
                 pbar.close()
                 break
-            sleep(1)
+            sleep(0.5)
   
     if over_predict:
         print(f"over prediction by {10000-elapsed} ms")

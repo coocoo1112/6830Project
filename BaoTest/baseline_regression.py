@@ -39,7 +39,7 @@ def train(data, query_encoding=False, word=False):
         
     if word:
         size = math.floor(.1*get_size_vocab(X))
-        print(X)
+        # print(X)
         nlp = Word2Vec(X, window=20, workers=16, vector_size = size)
         shape = get_shape_vector(X, nlp)
         X_ = [get_word_vector_sentence(sentence, nlp, shape) for sentence in X]

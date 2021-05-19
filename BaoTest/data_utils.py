@@ -304,7 +304,11 @@ def visualize_data(*args, quantile=True):
         stats = get_stats_dict(ry)
         print(stats)
         plot.scatter(y_, x_)
+        plot.title("Empirical PDF of query execution times")
+        plot.xlabel("Query Execution Time (ms)")
+        plot.ylabel("Empircal Probability")
         plot.show()
+
         y = np.array([float(i) for i in y])
         print(y)
         stats_ = get_stats_dict(y)
@@ -341,7 +345,7 @@ def save_results(result_set_name, results, data_set_name, instance_size=2, neo=F
     """
     mode = "a" if os.path.exists(result_set_name) else "w"
     first =  os.path.exists(result_set_name)
-    fields_ = ["model name", "instance size", "dataset name", "num trials", "avg rmse", "min rmse", "max rmse", "std rmse", "median rmse"]
+    fields_ = ["model name", "instance size", "dataset name", "num trials", "mean rmse", "min rmse", "max rmse", "std rmse", "median rmse"]
     name = "Bao"
     if neo and not word2vec:
         name = "Neo"
@@ -411,7 +415,7 @@ def get_offset(query):
 if __name__ == "__main__":
     # these are the RAW datasets i.e no rounding
     # current_data = ["data_v3.csv", "data_v5.csv", "data_v6.csv", "data_v7.csv", "data_v8.csv", "data_v10.csv"]
-    current_data = ["data_v30.csv", "data_v31.csv"]
+    # current_data = ["data_v30.csv", "data_v31.csv"]
     #dataset_stats("stats_data_v0.json", *current_data)
     # visualize_data(*current_data)
     # filter_outliers("data_v38.csv", *current_data)
@@ -419,5 +423,5 @@ if __name__ == "__main__":
     #visualize_data("data_v11.csv")
     #print(get_counts("data_v11.csv")[0])
     # print(make_uniform_dataset("data_v42.csv", "data_v38.csv", lambda x: .975*x[0] + 0.025*max(x[-2])))
-    # print(visualize_data("data_v39.csv", quantile=False))
+    print(visualize_data("data_v26.csv", quantile=False))
     pass

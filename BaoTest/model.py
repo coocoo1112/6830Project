@@ -209,7 +209,7 @@ class BaoRegression:
             X = [X]
         X = [json.loads(x) if isinstance(x, str) else x for x in X]
 
-        X = self.__tree_transform.transform(X, True)
+        X = self.__tree_transform.transform(X)
         
         self.__net.eval()
         pred = self.__net(X).cpu().detach().numpy()

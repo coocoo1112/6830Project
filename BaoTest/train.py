@@ -90,10 +90,10 @@ def get_explain_output(query):
     :query str the SQL query
     :return the query and the explain analyze output
     """
-    try:
-        return query, run_query(query)[0][0][0]
-    except:
-        return query, None
+    # try:
+    return query, run_query(query)[0][0][0]
+    # except:
+    #     return query, None
 
 def target(query, queue):
     start= int(round(time.time() * 1000))
@@ -115,10 +115,10 @@ def progress_bar():
 
     reg = model.BaoRegression(have_cache_data=False, verbose=True, neo=args.e, word2vec=w2v, shape=shape)
     reg.load(args.m)
-    query = f"EXPLAIN (COST true, FORMAT json, BUFFERS true) {args.q}"
+    query = f"EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) {args.q}"
     q, output = get_explain_output(query)
-    print(output)
-    predicted = reg.predict([output["Plan"]])
+    print("crap: ",output)
+    predicted = reg.predict([output])
     predY = [pred[0] for pred in predicted][0]
     q = queue.Queue()
     i = 1

@@ -423,5 +423,6 @@ if __name__ == "__main__":
     #visualize_data("data_v11.csv")
     #print(get_counts("data_v11.csv")[0])
     # print(make_uniform_dataset("data_v42.csv", "data_v38.csv", lambda x: .975*x[0] + 0.025*max(x[-2])))
-    print(visualize_data("data_v26.csv", quantile=False))
+    print(visualize_data("data_v39.csv", quantile=False))
+    #26 is the other dataset
     pass

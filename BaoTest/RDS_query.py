@@ -47,12 +47,13 @@ print("connected!")
 
 def run_query(query):
     global cursor
-    try:
-        cursor.execute(query)
-        return cursor.fetchall()
-    except:
-        cursor.close()
-        cursor = connect()
-        print("reconnected due to timeout")
-        raise RuntimeError("Query took too long")
+    # try:
+    print(query)
+    cursor.execute(query)
+    return cursor.fetchall()
+    # except:
+    #     cursor.close()
+    #     cursor = connect()
+    #     print("reconnected due to timeout")
+    #     raise RuntimeError("Query took too long")
 

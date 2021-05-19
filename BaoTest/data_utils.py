@@ -383,7 +383,6 @@ def get_size_vocab(sentences):
             except TypeError:
                 for actual_word in word:
                     if actual_word not in seen:
-                        print(actual_word)
                         seen.add(actual_word)
     return len(seen)
     
@@ -405,10 +404,9 @@ def get_shape_vector(sentences, nlp):
                 return nlp.wv[word].shape
 
 def get_offset(query):
-    for i, letter in enumerate(query):
-        if letter == ')':
-            return i
-                
+    return query.index(")")
+    
+
 
 if __name__ == "__main__":
     # these are the RAW datasets i.e no rounding

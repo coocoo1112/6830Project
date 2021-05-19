@@ -58,7 +58,7 @@ def collate(x):
     return trees, targets
 
 class BaoRegression:
-    def __init__(self, verbose=False, have_cache_data=False, neo=False, word2vec=False):
+    def __init__(self, verbose=False, have_cache_data=False, neo=False, word2vec=None, shape=None):
         self.__net = None
         self.__verbose = verbose
         self.neo = neo
@@ -71,7 +71,7 @@ class BaoRegression:
         self.__pipeline = Pipeline([("log", log_transformer),
                                     ("scale", scale_transformer)])
         
-        self.__tree_transform = NeoTreeFeaturizer(word2vec) if neo else TreeFeaturizer()
+        self.__tree_transform = NeoTreeFeaturizer(word2vec, shape) if neo else TreeFeaturizer()
         self.__have_cache_data = have_cache_data
         self.__in_channels = None
         self.__n = 0
@@ -172,6 +172,7 @@ class BaoRegression:
         loss_fn = torch.nn.MSELoss()
         
         losses = []
+        # was 100
         for epoch in range(100):
             loss_accum = 0
             for x, y in dataset:
@@ -208,7 +209,7 @@ class BaoRegression:
             X = [X]
         X = [json.loads(x) if isinstance(x, str) else x for x in X]
 
-        X = self.__tree_transform.transform(X)
+        X = self.__tree_transform.transform(X, True)
         
         self.__net.eval()
         pred = self.__net(X).cpu().detach().numpy()

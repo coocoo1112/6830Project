@@ -2,7 +2,7 @@ import numpy as np
 import json
 import re
 import sys
-from data_utils import dataset_iter, get_size_vocab, get_shape_vector, get_word_vector_sentence, get_offset
+from data_utils import dataset_iter, get_word_vector_sentence, get_offset
 import math
 from query_encoding import histogram_encoding, join_matrix, JOIN_TYPES, LEAF_TYPES
 from gensim.models import Word2Vec
@@ -27,11 +27,10 @@ def is_scan(node):
 
 
 class NeoTreeBuilder:
-    def __init__(self, stats_extractor, relations, word2vec=False):
+    def __init__(self, stats_extractor, relations):
         self.__stats = stats_extractor
         self.__relations = sorted(relations, key=lambda x: len(x), reverse=True)
         print(self.__relations)
-        self.word2vec = True
 
     def __relation_name(self, node):
         if "Relation Name" in node:
@@ -352,9 +351,10 @@ class TreeFeaturizer:
 
 
 class NeoTreeFeaturizer:
-    def __init__(self, word2vec):
+    def __init__(self, word2vec=None, shape=None):
         self.__tree_builder = None
         self.word2vec = word2vec
+        self.shape = shape
 
     def fit(self, trees):
         for t in trees:
@@ -365,22 +365,18 @@ class NeoTreeFeaturizer:
         stats_extractor = get_plan_stats([data[0] for data in trees])
         self.__tree_builder = NeoTreeBuilder(stats_extractor, all_rels)
 
-    def transform(self, trees):
-        # for t in trees:
-        #     _attach_buf_data(t)
+    def transform(self, trees,test=False):
+        for t in trees:
+            _attach_buf_data(t)
 
-        # make sentences for word2vec
-        if self.word2vec:
-            offset = get_offset(trees[0][1])
-            sentences = [self.get_sentence(data[1][offset+1:][:-1]) for data in trees]
-            size = math.floor(.1*get_size_vocab(sentences))
-            w2v = Word2Vec(sentences, window=20, workers=16, vector_size = size)
-            shape = get_shape_vector(sentences, w2v)    
-        return [self.__tree_builder.plan_to_feature_tree(x[0]["Plan"], get_query_enc(x[0]["Plan"]))  if not self.word2vec else self.__tree_builder.plan_to_feature_tree(x[0]["Plan"], get_word_vector_sentence(x[1], w2v, shape)) for x in trees]
+        offset = get_offset(trees[0][1])
+        # for x in trees:
+        #     print([i.strip() for i in x[1][offset+1:][:-1].split()])
+        #     break
+        return [self.__tree_builder.plan_to_feature_tree(x[0]["Plan"], get_query_enc(x[0]["Plan"]))  if self.word2vec is None else self.__tree_builder.plan_to_feature_tree(x[0]["Plan"], get_word_vector_sentence([i.strip() for i in x[1][offset+1:][:-1].split()], self.word2vec, self.shape)) for x in trees]
 
     
-    def get_sentence(self, query):
-        return [i.strip() for i in query.split()]
+    
 
     def num_operators(self):
         return len(ALL_TYPES)

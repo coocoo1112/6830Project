@@ -1,13 +1,14 @@
 from csv import DictReader
 import model
 import random
-from data_utils import dataset_iter, save_results
+from data_utils import dataset_iter, save_results, get_size_vocab, get_shape_vector, get_word_vector_sentence, get_offset
 from sklearn.metrics import mean_squared_error 
 import numpy as np
 import sys
 from gensim.models import Word2Vec
 from sklearn.model_selection import KFold
 import argparse
+import math
 
 class BaoTrainingException(Exception):
     pass
@@ -35,9 +36,16 @@ def train(verbose=True):
     else:
         x = [i for i, _ in pairs]
         y = [float(i) for _, i in pairs]
-       
-   
-    reg = model.BaoRegression(have_cache_data=False, verbose=verbose, neo=args.e, word2vec=args.w)
+
+    shape=None
+    w2v=None 
+    if args.w:
+        offset = get_offset(x[0][1])
+        sentences = [[i.strip() for i in data[1][get_offset(x[0][1])+1:][:-1].split()] for data in x]       
+        size = math.floor(.1*get_size_vocab(sentences))
+        w2v = Word2Vec(sentences, window=20, workers=16, vector_size = size)
+        shape = get_shape_vector(sentences, w2v)  
+    reg = model.BaoRegression(have_cache_data=False, verbose=verbose, neo=args.e, word2vec=w2v, shape=shape)
     #print(y)
     # print("1")
     # print(np.mean(ty))
@@ -47,12 +55,12 @@ def train(verbose=True):
     results = []
     i = 1
     for train_idx, test_idx in kf.split(x):
-        print(len(train_idx), len(test_idx))
-        trainX = np.array([x[i] for i in train_idx])
-        testX = np.array([x[i] for i in test_idx])
-        trainY = np.array([y[i] for i in train_idx])
-        trueY = np.array([y[i] for i in test_idx])
+        trainX =[x[i] for i in train_idx]
+        testX = [x[i] for i in test_idx]
+        trainY = [y[i] for i in train_idx]
+        trueY = [y[i] for i in test_idx]
         reg.fit(trainX, trainY)
+
 
         predictions = reg.predict(testX)
         predY = [pred[0] for pred in predictions]
@@ -61,26 +69,6 @@ def train(verbose=True):
         i += 1
         results.append(rmse)
     save_results(args.c, results, args.v, args.s, args.e, args.w, False)
-    # result = reg.predict(tx)
-    # ty = np.array(ty).astype(np.float32)
-    # # print(ty)
-    # # print(result)
-
-    # res = np.array([])
-    # for i in range(len(result)):
-    #     # print("test")
-    #     res = np.append(res, result[i])
-    #print(res)
-    # for i in range(len(result)):
-    #     print(ty[i], res[i])
-    #     print(type(ty[i]), type(res[i]))
-    #flat_result = result.flatten()
-    #sub = np.subtract(flat_result, ty)
-    #print(np.sort(sub))
-
-
-    # print(f"RMSE: {mean_squared_error(ty, res, squared=False)}")
-    # reg.save(fn)
     return reg
 
 if __name__ == "__main__":

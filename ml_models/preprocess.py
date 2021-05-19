@@ -9,8 +9,8 @@ import numpy as np
 def _commandline_parser():
   """Commandline parser."""
   parser = argparse.ArgumentParser()
-  parser.add_argument('--input_filename', type=str, default='data.v1.csv')
-  parser.add_argument('--num_evals', type=int, default=50)
+  parser.add_argument('--input_filename', type=str, default='data.v3.csv')
+  parser.add_argument('--num_evals', type=int, default=2000)
 
   return parser
 
@@ -27,10 +27,9 @@ def _curate_data(data):
   """Removing rows that contains NA."""
   new_data = []
   for row in data:
-    query = row[0].lower()
-    execute_time = ast.literal_eval(row[1])
+    execute_time = ast.literal_eval(row[2])
 
-    new_data.append((query, execute_time, row[2], row[3]))
+    new_data.append((row[0].lower(), execute_time, row[1].lower(), row[3].lower()))
 
   return new_data
 

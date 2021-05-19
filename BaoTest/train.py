@@ -90,19 +90,20 @@ def get_explain_output(query):
     :query str the SQL query
     :return the query and the explain analyze output
     """
-    # try:
-    return query, run_query(query)[0][0][0]
-    # except:
-    #     return query, None
+    try:
+        return query, run_query(query)[0][0][0]
+    except:
+        return query, None
 
 def target(query, queue):
     start= int(round(time.time() * 1000))
+    # sleep(2)
     try:
         run_query(query)
     except:
         raise RuntimeError("error running the query")
 
-    queue.put(f"{int(round(time.time() * 1000))-start} ms total for the query")
+    queue.put(int(round(time.time() * 1000))-start)
     return
 def progress_bar():
     shape = None
@@ -115,42 +116,47 @@ def progress_bar():
 
     reg = model.BaoRegression(have_cache_data=False, verbose=True, neo=args.e, word2vec=w2v, shape=shape)
     reg.load(args.m)
-    query = f"EXPLAIN (ANALYZE true, COSTS true, FORMAT json, BUFFERS true) {args.q}"
+    query = f"EXPLAIN (COSTS true, FORMAT json) {args.q}"
     q, output = get_explain_output(query)
-    print("crap: ",output)
+    print(output)
+    # print("crap: ",output)
     predicted = reg.predict([output])
     predY = [pred[0] for pred in predicted][0]
     q = queue.Queue()
     i = 1
     started = False
     start = int(round(time.time() * 1000))
-    t = Thread(target=target, args=(1,q))
-    t.start()
+    t = Thread(target=target, args=(query,q))
 
     over_predict = False
-    total = math.ceil(predY/1000)
-    with tqdm(total=total, position=0, leave=True) as pbar:
-        for i in tqdm(range(total), position=0, leave=True):         
+    total = math.ceil(predY/15)
+    #/1000
+    with tqdm(total=total, position=0) as pbar:
+        for i in tqdm(range(total), position=0):  
+            if not started:
+                started = True
+                t.start()       
             elapsed = int(round(time.time() * 1000))-start
             if not t.is_alive():
-               over_predict = True
+            #    over_predict = True
                pbar.close()
                break
             if elapsed >= 5000:
                 pbar.close()
                 break
-            sleep(0.5)
+            sleep(.001)
   
-    if over_predict:
-        print(f"over prediction by {10000-elapsed} ms")
         t.join()
-        print(q.get())
-    else:
-        print(f"under prediction by {elapsed - 10000} ms")  
-        t.join()
-        print(q.get()) 
+        time_ = q.get()
+        if time_ <= predY:
+            print(f"over prediction by {predY - time_} ms")
 
-    return
+        else:
+            print(f"under prediction by {time_ - predY} ms")  
+        
+        print(f"took {time_} ms")
+
+        return
 
 
 if __name__ == "__main__":

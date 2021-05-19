@@ -6,7 +6,9 @@ import os
 import json
 from featurize import get_all_relations
 import time
+import argparse
 from data_utils import dataset_iter
+
 
 
 FIELDS = ["query", "plan", "execution_time (ms)", "tables"]
@@ -84,21 +86,21 @@ def create_data_set(csv_name):
         csv_writer = writer(csv_file)
         csv_writer.writerow(FIELDS)
         dict_writer = DictWriter(csv_file, fieldnames=FIELDS)
-        pool = Pool(processes=4)
-        result = pool.imap_unordered(get_explain_output, queries[len(queries)//2:])
+        # pool = Pool(processes=4)
+        # result = pool.imap_unordered(get_explain_output, queries)
         i = 1
-        # for query in queries:
-        #     q, plan = get_explain_output(query)
-        #     dict_writer.writerow(make_row_dict(q, plan))
+        for query in queries:
+            q, plan = get_explain_output(query)
+            dict_writer.writerow(make_row_dict(q, plan))
+            print(f"{i}/{len(queries)} done so far")
+            i += 1
+        # for query, output in result:
+        #     if not output:
+        #         continue
         #     print(f"{i}/{len(queries)} done so far")
         #     i += 1
-        for query, output in result:
-            if not output:
-                continue
-            print(f"{i}/{len(queries)//2} done so far")
-            i += 1
-            row_dict = make_row_dict(query, output)
-            dict_writer.writerow(row_dict)
+        #     row_dict = make_row_dict(query, output)
+        #     dict_writer.writerow(row_dict)
     print("DONE!")
     for q in FAILED:
         print(f"query failed: {q}")
@@ -125,7 +127,10 @@ if  __name__ == "__main__":
     # print(f"Result of my tests: {all(results)}")
     # print(len(generate_two_table_joins()))
     # print(generate_two_table_joins())
-    print(create_data_set("data_v31.csv"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--v", type=str, required=True)
+    args = parser.parse_args()
+    print(create_data_set(args.v))
 
 
     

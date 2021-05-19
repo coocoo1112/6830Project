@@ -6,6 +6,7 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plot
 import math
+import argparse
 # relevant csvs to union would be v3, v5, v6, v7, v8, v10
 
 
@@ -423,6 +424,14 @@ if __name__ == "__main__":
     #visualize_data("data_v11.csv")
     #print(get_counts("data_v11.csv")[0])
     # print(make_uniform_dataset("data_v42.csv", "data_v38.csv", lambda x: .975*x[0] + 0.025*max(x[-2])))
-    print(visualize_data("data_v39.csv", quantile=False))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--v", type=str, required=True)
+    parser.add_argument("--q", type=lambda x: True if x == "True" else False, required=False)
+    parser.add_argument("--n", type=str, required=False)
+    args = parser.parse_args()
+    if not args.n:
+        print(visualize_data(args.v, quantile=args.q))
+    else:
+        print(make_uniform_dataset(args.n, args.v, lambda x: .975*x[0] + 0.025*max(x[-2])))
+
     #26 is the other dataset
-    pass

@@ -1,5 +1,6 @@
 import psycopg2 as ps
 import os
+import time
 # postgres_index1 is index instance
 # index1 indices:
 """
@@ -47,13 +48,14 @@ print("connected!")
 
 def run_query(query):
     global cursor
-    # try:
-    print(query)
-    cursor.execute(query)
-    return cursor.fetchall()
-    # except:
-    #     cursor.close()
-    #     cursor = connect()
-    #     print("reconnected due to timeout")
-    #     raise RuntimeError("Query took too long")
+    try:
+        cursor.execute(query)
+        res = cursor.fetchall()
+        time.sleep(2)
+        return res
+    except:
+        cursor.close()
+        cursor = connect()
+        print("reconnected due to timeout")
+        raise RuntimeError("Query took too long")
 

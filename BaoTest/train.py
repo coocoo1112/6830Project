@@ -9,6 +9,7 @@ from gensim.models import Word2Vec
 from sklearn.model_selection import KFold
 import argparse
 import math
+import torch
 
 class BaoTrainingException(Exception):
     pass
@@ -69,7 +70,11 @@ def train(verbose=True):
         i += 1
         results.append(rmse)
     save_results(args.c, results, args.v, args.s, args.e, args.w, False)
+    torch.save(reg.stat_dict(), args.m)
     return reg
+
+def progress_bar():
+    reg = model.BaoRegression(have_cache_data=False, verbose=verbose, neo=args.e, word2vec=w2v, shape=shape)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -82,8 +87,15 @@ if __name__ == "__main__":
     parser.add_argument("--k",type=int, default=15, required=False)
     parser.add_argument("--c", type=str, default="result_v1.csv", required=False)
     parser.add_argument("--s",type=int, default=20, required=False)
-
+    #path to save model and path to load
+    parser.add_argument("--m", type=str, required=True)
+    #if we are training or doing a progress bar
+    parser.add_argument("--p", type=lambda x: True if x=='True' else False, default=False, required=False)
+    
     args = parser.parse_args()
+    if not args.p:
+        train()
+    else:
+        pass
 
-    train()
 

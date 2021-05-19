@@ -115,8 +115,9 @@ def progress_bar():
 
     reg = model.BaoRegression(have_cache_data=False, verbose=True, neo=args.e, word2vec=w2v, shape=shape)
     reg.load(args.m)
-    query = f"EXPLAIN (COSTS true, FORMAT json, BUFFERS true) {args.q}"
+    query = f"EXPLAIN (COST true, FORMAT json, BUFFERS true) {args.q}"
     q, output = get_explain_output(query)
+    print(output)
     predicted = reg.predict([output["Plan"]])
     predY = [pred[0] for pred in predicted][0]
     q = queue.Queue()

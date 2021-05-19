@@ -28,19 +28,14 @@ def train(verbose=True):
 
             
     random.shuffle(pairs)
-    train_percent = 0.75
-    train_amount = int(len(pairs) * train_percent)
-    print(train_amount)
     if args.e:
-        x = [(p, q) for q, p, r in pairs[:train_amount]]
-        y = [float(r) for q, p, r in pairs[:train_amount]]
-        tx = [(p, q) for q, p, r in pairs[train_amount:]]
-        ty = [float(r) for q, p, r in pairs[train_amount:]]
+        x = [(p, q) for q, p, r in pairs]
+        y = [float(r) for q, p, r in pairs]
+        
     else:
-        x = [i for i, _ in pairs[:train_amount]]
-        y = [float(i) for _, i in pairs[:train_amount]]
-        tx = [i for i, _ in pairs[train_amount:]]
-        ty = [float(i) for _, i in pairs[train_amount:]]  
+        x = [i for i, _ in pairs]
+        y = [float(i) for _, i in pairs]
+       
    
     reg = model.BaoRegression(have_cache_data=False, verbose=verbose, neo=args.e, word2vec=args.w)
     #print(y)
@@ -59,7 +54,7 @@ def train(verbose=True):
         trueY = np.array([y[i] for i in test_idx])
         reg.fit(trainX, trainY)
 
-        predictions = model.predict(testX)
+        predictions = reg.predict(testX)
         predY = [pred[0] for pred in predictions]
         rmse = mean_squared_error(trueY, predY, squared=False)
         print(f"Trial {i} RMSE: {rmse}")

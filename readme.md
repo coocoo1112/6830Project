@@ -1,4 +1,4 @@
-Query Performance predicter
+Query Performance predicter This is for the BaoTest folder to run the NLP models, read the README in the folder ml_models
 
 -in order to run our code, you first must set the correct database credentials in BaoTest/RDS_query.py this is important, if you don't do this, you cannot generate data or use the progress bar. Our BaoTest/generate_sql.py is tailored specifically to TPC-H schema and does not generalize.
 -to generate a dataset you need to run cd in the BaoTest folder and run 
@@ -7,7 +7,7 @@ Query Performance predicter
 ```
 -to get a plot of a dataset, cd into BaoTest folder and run 
 ```
-python data_utils.py --v [dataset name to visualize] --q [if you want to filter out values less than a quantile for yes, type in True] 
+python data_utils.py --v [dataset name to visualize] --q [if you want to filter out values less than a quantile, type in True for yes] 
 ```
 
 -to make a dataset more uniform, cd into BaoTest folder and run 
@@ -17,7 +17,7 @@ python data_utils.py --v [dataset name to make uniform] --n [new dataset name to
 
 -to train a tree convolution model, cd into BaoTest and run 
 ```
-python train.py --v [training data set name] --e [True if we want to run neo encoding False else] --w [True if we want to run word2vec encoding False else, if this param is True, --e MUST ALSO BE TRUE] --k [how many folds of cross validation we want to do] --c [csv name of where we want to save results] --s [size of database instance dataset came from] --save_word2vec [where to save word2vec model] --m [path to save tree convolution model] 
+python train.py --v [training data set name] --e [True if we want to run neo encoding else False] --w [True if we want to run word2vec encoding False else, if this param is True, --e MUST ALSO BE TRUE] --k [how many folds of cross validation we want to do] --c [csv name of where we want to save results] --s [size of database instance dataset came from] --save_word2vec [where to save word2vec model] --m [path to save tree convolution model] 
 ```
 
 -to run the progress par, cd into BaoTest and run 
@@ -27,5 +27,5 @@ python train.py --m [path of model to load] --save_word2vec [path of word2vec mo
 
 -to run a regression, cd into BaoTest and run 
 ```
-python baseline_regression.py --v [name of dataset to train on] --e [if we are doing query encdoing or no, for yes type in True] --w [if we are doing word2vec encoding, for yes type in True if this is True, then --e MUST ALSO BE TRUE] --k [how many folds of cross validation we want to do] --c [csv name of where we want to save results] --s [size of database instance dataset came from]
+python baseline_regression.py --v [name of dataset to train on] --e [if we are doing query encdoing, type in True if yes else False] --w [if we are doing word2vec encoding, for yes type in True if this is True, then --e MUST ALSO BE TRUE] --k [how many folds of cross validation we want to do] --c [csv name of where we want to save results] --s [size of database instance dataset came from]
 ```

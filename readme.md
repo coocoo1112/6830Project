@@ -1,7 +1,6 @@
 Query Performance predicter
 
-for files in BaoTest folder:
--in order to run our code, you first must set the correct database credential in BaoTest/RDS_query.py this is important, if you don't do this, you cannot generate data or use the progress bar. Our BaoTest/generate_sql.py is tailored specifically to TPC-H schema and does not generalize.
+-in order to run our code, you first must set the correct database credentials in BaoTest/RDS_query.py this is important, if you don't do this, you cannot generate data or use the progress bar. Our BaoTest/generate_sql.py is tailored specifically to TPC-H schema and does not generalize.
 
 -to generate a dataset you need to run cd in the BaoTest folder and run python generate_data.py --v [name of csv to save to]
 
